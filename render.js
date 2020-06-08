@@ -71,4 +71,25 @@ var render = function () {
 
 		mapCanvW * scale, scanline_size); // destination width height
 	}
+
+	ls = loadedSong.ch[0];
+	if (ls){
+		for (i = 0; i < ls.pitches.length; i++){
+			
+			sx = -1; sy = -1;
+			dy = 1000;
+			if (ls.pitches[i] == 0){
+				sx = 128; sy = 256;
+				dy = 600;
+			}else if (ls.pitches[i] == 1){
+				sx = 160; sy = 256;
+				dy = 580;
+			}else if (ls.pitches[i] == 2){
+				sx = 144; sy = 256;
+				dy = 560;
+			}
+			
+			ctx.drawImage(tileset,sx,sy,16,16,16 - i * 50 + loadedSong.time * 2,dy,32,32)
+		}
+	}
 }

@@ -4,6 +4,7 @@ var update = function (delta) {
 		if (cam_unlock){
 			cam_dir -= Math.PI / 32;
 			redrawFlag = true;
+			soundPlayerInit();
 		}
 	}
 	if (68 in keysDown) { // right
@@ -27,10 +28,11 @@ var update = function (delta) {
 			redrawFlag = true;
 		}
 	}
+	songTick();
 }
 
 var keysDown = {};
-tileset = new Image(); tileset.src = "sprites.png";
+tileset = new Image(); tileset.src = "botb-spritesheet.png";
 
 var init = function () {
 
@@ -83,4 +85,5 @@ document.addEventListener('DOMContentLoaded', function(e) {
 	tileset.onload = function(){
 		initMapDrawing();
 	}
+	loadSong(song_TEST);
 });

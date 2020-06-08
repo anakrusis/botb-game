@@ -4,17 +4,24 @@
 	<head>
 		<title>BOTB Game Jam #4 Entry</title>
 		<meta charset="UTF-8">
+		
+		<!-- List your beatmaps here!! -->
+		<script src = "./songs/song_TEST.js"></script>
+		
+		<!-- List your song files here!! -->
+		<audio src="met.ogg" type="audio/ogg"></audio>
+		
 	</head>
 	
 	<body>
 		<canvas id="Canvas" width="1000" height="640"></canvas>
 		<canvas id="MapCanvas" width="1000" height="640" style="display:none"></canvas>
-		<canvas id="TexCanvas" width="1" height="1" style="display:block"></canvas>
+		<canvas id="TexCanvas" width="1" height="1" style="display:none"></canvas>
 		
 		<script src = "./floor.js"></script>
 		<script src = "./socket.io.slim.js"></script>
 		
-		<script src = "./soundplayer.js"></script>
+		<script src = "./musichandler.js"></script>
 		<script src = "./camera.js"></script>
 		<script src = "./render.js"></script>
 		<script src = "./game.js"></script>
