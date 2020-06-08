@@ -1,6 +1,6 @@
 var flat_factor = 8;
-var horizon_scanline = 128;
-var scanline_size = 2;
+var horizon_scanline = 32;
+var scanline_size = 1;
 var renderAngle;
 
 var mapOrX = 500; // map canvas origin x/y
@@ -30,10 +30,7 @@ var initMapDrawing = function () {
 		destx = (i % map.width) * 16;
 		desty = Math.floor(i / map.width) * 16;
 		
-		console.log(destx);
-		
 		texCtx.drawImage(tileset,sourcex,sourcey,16,16,destx,desty,16,16)
-		//texCtx.drawImage(tileset, 0, 0);
 	}
 }
 
