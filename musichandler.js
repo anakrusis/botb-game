@@ -3,7 +3,7 @@ CHANNELS_AMT = 3;
 loadedSong = {
 	time:0,
 	ch: [],
-	currentIndex: [],
+	nextNote: [],
 	length: 0
 }
 soundInitted = false;
@@ -23,23 +23,10 @@ var soundPlayerInit = function () {
 }
 
 var loadSong = function (song) {
-	
-/* 	data = atob(song.bg_src);
-	uint8array = new TextEncoder().encode(data);
-	
-	source = audioCtx.createBufferSource();
-	
-	audioCtx.decodeAudioData( uint8array.buffer, function(buffer) {
-        myBuffer = buffer;
-        songLength = buffer.duration;
-        source.buffer = myBuffer;
-        source.playbackRate.value = playbackControl.value;
-        source.connect(audioCtx.destination);
-        source.loop = true;
-	}); */
-	
-	playSong();
+
 	loadBeatmap(song);
+	playSong();
+
 }
 
 function playSong() {
@@ -54,7 +41,7 @@ var loadBeatmap = function (song) {
 
 	for (i = 0; i < CHANNELS_AMT; i++){ // init blank channels
 		loadedSong.ch[i] = { pitches:[], times:[] };
-		loadedSong.currentIndex[i] = 0;
+		loadedSong.nextNote[i] = 0;
 		
 		loadedSong.time = 0;
 		loadedSong.length = 0;
@@ -154,7 +141,7 @@ var songTick = function () {
 			
 			ls = loadedSong.ch[i];
 	
-			for (j=0; j < ls.pitches.length; j++){
+/* 			for (j=0; j < ls.pitches.length; j++){
 				if (ls.times[j] == loadedSong.time) {
 				
 					if (ls.pitches[j] == -1){ //rest
@@ -166,12 +153,31 @@ var songTick = function () {
 						console.log(ls.times[j]);
 					}
 				}
+			} */
+			index = loadedSong.nextNote[i]
+			if (ls.times[index] <= loadedSong.time){
+			
+				if (ls.pitches[index] == -1){ //rest
+					
+				}else{
+					sfx_MET.pause();
+					sfx_MET.currentTime = 0;
+					sfx_MET.play();
+					console.log(ls.times[index]);
+				}
+			
+				loadedSong.nextNote[i]++;
 			}
 		}
+		
+		OFFSET = 6;
 
-		loadedSong.time++;
-		if (loadedSong.time > loadedSong.length && loadedSong.loop){
+		loadedSong.time = Math.round(sng_TEST.currentTime * 60) + OFFSET
+		if (loadedSong.time - (OFFSET / 2) >= loadedSong.length && loadedSong.loop){
 			loadedSong.time = 0;
+			for (i = 0; i < CHANNELS_AMT; i++){
+				loadedSong.nextNote[i] = 0;
+			}
 			playSong()
 		}
 	}
