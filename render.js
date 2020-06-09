@@ -15,8 +15,48 @@ var canvH = 640;
 
 var redrawFlag = true; // this is a flag that gets set off whenever there is a change in perspective requiring a map redraw
 
+var rotatedX = function(x, y){
+	tx = tra_x_o( x, mapOrX ) - mapOrX;
+	ty = tra_y_o( y, mapOrY ) - mapOrY;
+	return rot_x(renderAngle, tx, ty) + mapOrX; 
+	
+}
+
+var rotatedY = function(x, y){
+	tx = tra_x_o( x, mapOrX ) - mapOrX;
+	ty = tra_y_o( y, mapOrY ) - mapOrY;
+	return rot_y(renderAngle, tx, ty) + mapOrY;
+}
+
+var scaledX = function (x, y){
+
+	rx = rotatedX(x, y); ry = rotatedY(x, y);
+
+	line = (canvH * ry) / (-ry + canvH) // This is the algebraic inverse of the map drawing code
+	scale = 1 + (line / canvH)
+	return ((rx - mapOrX ) * scale * (canvW / mapCanvW) + canvOrX)
+	//return (rx - mapOrX) * scale + canvOrX
+}
+
+var scaledY = function (x, y){
+	
+	rx = rotatedX(x, y); ry = rotatedY(x, y);
+
+	line = (canvH * ry) / (-ry + canvH)
+	scale = 1 + (line / canvH)
+	return horizon_scanline + line / flat_factor
+}
+
+var compareHeightVal = function (entity1, entity2){
+
+	sy1 = scaledY(entity1.x, entity1.y);
+	sy2 = scaledY(entity2.x, entity2.y);
+	
+	return sy1 - sy2;
+}
+
 var initSprites = function () {
-	console.log("Initting sprite canvas ");
+	console.log("Initializing sprite canvas.");
 	for (q = 0; q < spriteCanvases.length; q++){
 		spriteCanvases[q].init();
 	}
@@ -41,12 +81,41 @@ var initMapDrawing = function () {
 	}
 }
 
+var renderEntity = function (entity, x_offset, y_offset) {
+	
+	rx = rotatedX(entity.x, entity.y);// rotated x/y
+	ry = rotatedY(entity.x, entity.y);
+	sx = scaledX(entity.x, entity.y); // scaled x/y
+	sy = scaledY(entity.x, entity.y);
+	sx -= (entity.width / 2) * cam_zoom * scale;
+	sy -= entity.height * cam_zoom * scale; // To draw at the bottom left corner
+	
+	if (sy > horizon_scanline - ( entity.height * cam_zoom * scale)){ // Culling past the horizon
+		
+		if (entity.shadow){
+			//ctx.drawImage(texture_SHADOW, sx, sy + entity.height * cam_zoom * scale * 0.95, entity.width * cam_zoom * scale, 1 * cam_zoom * scale)	
+		}
+		
+		if (entity.altitude){
+			sy -= (entity.altitude * cam_zoom * scale);
+		}
+		// the real drawing
+		entityCanv = spriteCanvases[entity.texture].canvas;
+		if (entityCanv){
+			ctx.drawImage(entityCanv, sx, sy, entity.width * cam_zoom * scale, entity.height * cam_zoom * scale)
+		}
+		//ctx.drawImage(tileset, sx, sy, entity.width * cam_zoom * scale, entity.height * cam_zoom * scale)
+	}
+}
+
 var render = function () {
 	ctx.fillStyle = "#000000";
 	//ctx.fillStyle = "#FF00FF"; // deastl mode
 	ctx.fillRect(0,0,canvas.width,canvas.height);
 	
 	renderAngle = 2 * Math.PI - cam_dir - Math.PI / 2
+	
+	entityRenderList = [];
 	
 	if (map && redrawFlag) { // map render (top-down here, mode7 afterwards)
 	
@@ -77,6 +146,14 @@ var render = function () {
 		canvOrX - (mapOrX * scale), horizon_scanline + i / flat_factor, // destination x y
 
 		mapCanvW * scale, scanline_size); // destination width height
+	}
+	
+	for (i in entities){
+		entityRenderList.push(entities[i]);
+	}
+	entityRenderList.sort(compareHeightVal);
+	for (var i = 0; i < entityRenderList.length; i++){
+		renderEntity( entityRenderList[i], 0, 0);
 	}
 
 	ls = loadedSong.ch[0];

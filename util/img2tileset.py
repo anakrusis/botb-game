@@ -20,11 +20,11 @@ tWidth, tHeight = imageTileset.size
 file_out.write(canvasName + ' = {\n')
 
 file_out.write('init(){\n')
-file_out.write(canvasName + '_canvas = document.createElement("canvas");\n')
-file_out.write(canvasName + '_ctx = ' + canvasName + '_canvas.getContext("2d");\n')
-file_out.write(canvasName + '_canvas.setAttribute("id", "' + canvasName + '");\n')
-file_out.write(canvasName + '_canvas.width = ' + str(width) + '; ' + canvasName + '_canvas.height = ' + str(height) + ";\n")
-file_out.write("document.body.appendChild(" + canvasName + "_canvas );\n")
+file_out.write('this.canvas = document.createElement("canvas");\n')
+file_out.write('this.ctx = this.canvas.getContext("2d");\n')
+file_out.write('this.canvas.setAttribute("id", "' + canvasName + '");\n')
+file_out.write('this.canvas.width = ' + str(width) + '; ' + 'this.canvas.height = ' + str(height) + ";\n")
+file_out.write("document.body.appendChild(" + "this.canvas );\n")
 
 currentPixelKey = ""
 
@@ -37,7 +37,7 @@ def main():
         for y in range (height):
             pixel = i_loaded[x,y]
             r = pixel[0]; g = pixel[1]; b = pixel[2]; a = pixel[3];
-            pixelKey = str(r) + " " + str(g) + " " + str(b)
+            pixelKey = str(r) + " " + str(g) + " " + str(b) + " " + str(a)
             #print(pixelKey);
 
             if (not pixelKey in palette_x):
@@ -49,7 +49,7 @@ def main():
             tileX = palette_x.get(pixelKey)
             tileY = palette_y.get(pixelKey)
 
-            file_out.write(canvasName + '_ctx.drawImage(tileset, ' + str(tileX) + ", " + str(tileY) + ", 1, 1, " + str(x) + ", " + str(y) + ", 1, 1);\n")
+            file_out.write('this.ctx.drawImage(tileset, ' + str(tileX) + ", " + str(tileY) + ", 1, 1, " + str(x) + ", " + str(y) + ", 1, 1);\n")
 
             #if (currentPixelKey != pixelKey or currentY != y):
                 #file_out.write("for (i = " + str(startX) + "; i < " + str(x) + "; i++){\n")

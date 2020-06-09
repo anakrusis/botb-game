@@ -1,3 +1,16 @@
+class Entity {
+	constructor(){
+		this.name = "Entity";
+		this.x = 0;
+		this.y = 0;
+		
+		this.texture = 0;
+		this.height = 64;
+		this.width = 48;
+		this.shadow = true;
+	}
+}
+
 var update = function (delta) {
 	t = 4
 	if (65 in keysDown) { // left	
@@ -61,6 +74,11 @@ var init = function () {
 	screen = "main";
 	map = TileMaps.floor;
 	cam_unlock = true;
+	
+	entities = []
+	e = new Entity();
+	e.x = 100; e.y = 100;
+	entities.push( e )
 
 	// main loop
 	var main = function () {
@@ -81,8 +99,9 @@ var init = function () {
 }
 
 document.addEventListener('DOMContentLoaded', function(e) {
-	init();
+
 	tileset.onload = function(){
+		init();
 		initSprites();
 		initMapDrawing();
 	}
