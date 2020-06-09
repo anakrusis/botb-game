@@ -83,6 +83,7 @@ var init = function () {
 document.addEventListener('DOMContentLoaded', function(e) {
 	init();
 	tileset.onload = function(){
+		initSprites();
 		initMapDrawing();
 	}
 	loadSong(song_TEST);

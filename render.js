@@ -1,6 +1,6 @@
 var flat_factor = 8;
 var horizon_scanline = 32;
-var scanline_size = 1;
+var scanline_size = 2;
 var renderAngle;
 
 var mapOrX = 500; // map canvas origin x/y
@@ -14,6 +14,13 @@ var canvW = 1000;
 var canvH = 640;
 
 var redrawFlag = true; // this is a flag that gets set off whenever there is a change in perspective requiring a map redraw
+
+var initSprites = function () {
+	console.log("Initting sprite canvas ");
+	for (q = 0; q < spriteCanvases.length; q++){
+		spriteCanvases[q].init();
+	}
+}
 
 var initMapDrawing = function () {
 
@@ -88,8 +95,10 @@ var render = function () {
 				sx = 144; sy = 256;
 				dy = 560;
 			}
+			nowLine = 800;
 			
-			ctx.drawImage(tileset,sx,sy,16,16,16 - i * 50 + loadedSong.time * 2,dy,32,32)
+			ctx.fillRect(800, 520, 2, 200)
+			ctx.drawImage(tileset,sx,sy,16,16,nowLine - ( ls.times[i] - loadedSong.time ) * 2,dy,32,32)
 		}
 	}
 }
