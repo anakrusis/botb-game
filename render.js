@@ -175,7 +175,7 @@ var render = function () {
 			nowLine = 800;
 			
 			ctx.fillRect(800, 520, 2, 200)
-			ctx.drawImage(tileset,sx,sy,16,16,nowLine - ( ls.times[i] - loadedSong.time ) * 2,dy,32,32)
+			ctx.drawImage(tileset,sx,sy,16,16,nowLine - ( ls.times[i] - loadedSong.time ) * 3,dy,32,32)
 		}
 	}
 }

@@ -3,6 +3,7 @@ class Entity {
 		this.name = "Entity";
 		this.x = 0;
 		this.y = 0;
+		this.altitude = 0;
 		
 		this.texture = 0;
 		this.height = 64;
@@ -18,6 +19,7 @@ var update = function (delta) {
 			cam_dir -= Math.PI / 32;
 			redrawFlag = true;
 			soundPlayerInit();
+			loadSong(song_TEST);
 		}
 	}
 	if (68 in keysDown) { // right
@@ -45,7 +47,7 @@ var update = function (delta) {
 }
 
 var keysDown = {};
-tileset = new Image(); tileset.src = "botb-spritesheet.png";
+tileset = new Image(); tileset.src = "./img/botb-spritesheet.png";
 
 var init = function () {
 
@@ -77,7 +79,7 @@ var init = function () {
 	
 	entities = []
 	e = new Entity();
-	e.x = 100; e.y = 100;
+	e.x = 240; e.y = 240;
 	entities.push( e )
 
 	// main loop
@@ -98,12 +100,24 @@ var init = function () {
 	main();
 }
 
+window.onblur = function(){
+	if (soundInitted){
+		sng_TEST.pause();
+	}
+}
+
+window.onfocus = function(){
+	if (soundInitted){
+		sng_TEST.play();
+	}
+}
+
 document.addEventListener('DOMContentLoaded', function(e) {
 
 	tileset.onload = function(){
 		init();
 		initSprites();
 		initMapDrawing();
+		redrawFlag = true;
 	}
-	loadSong(song_TEST);
 });

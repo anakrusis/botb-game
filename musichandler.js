@@ -13,12 +13,44 @@ var soundPlayerInit = function () {
 	if (!soundInitted){
 		soundInitted = true;
 		
-		metSound = new Audio();
-		metSound.src = "met.ogg";
+		audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+		
+		sfx_MET = new Audio(); sfx_MET.src = "sfx/met.ogg";
+		sfx_OOF = new Audio(); sfx_OOF.src = "sfx/oof.ogg";
+		
+		sng_TEST = new Audio(); sng_TEST.src = "songs/tutorial.ogg";
 	}
 }
 
 var loadSong = function (song) {
+	
+/* 	data = atob(song.bg_src);
+	uint8array = new TextEncoder().encode(data);
+	
+	source = audioCtx.createBufferSource();
+	
+	audioCtx.decodeAudioData( uint8array.buffer, function(buffer) {
+        myBuffer = buffer;
+        songLength = buffer.duration;
+        source.buffer = myBuffer;
+        source.playbackRate.value = playbackControl.value;
+        source.connect(audioCtx.destination);
+        source.loop = true;
+	}); */
+	
+	playSong();
+	loadBeatmap(song);
+}
+
+function playSong() {
+	if (soundInitted){
+		sng_TEST.pause();
+		sng_TEST.currentTime = 0;
+		sng_TEST.play();                       
+	}			
+}
+
+var loadBeatmap = function (song) {
 
 	for (i = 0; i < CHANNELS_AMT; i++){ // init blank channels
 		loadedSong.ch[i] = { pitches:[], times:[] };
@@ -128,7 +160,10 @@ var songTick = function () {
 					if (ls.pitches[j] == -1){ //rest
 					
 					}else{
-						metSound.play();
+						sfx_MET.pause();
+						sfx_MET.currentTime = 0;
+						sfx_MET.play();
+						console.log(ls.times[j]);
 					}
 				}
 			}
@@ -137,6 +172,7 @@ var songTick = function () {
 		loadedSong.time++;
 		if (loadedSong.time > loadedSong.length && loadedSong.loop){
 			loadedSong.time = 0;
+			playSong()
 		}
 	}
 }
