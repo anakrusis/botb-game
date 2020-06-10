@@ -64,6 +64,8 @@ var initSprites = function () {
 
 var initMapDrawing = function () {
 
+	map = rooms[currentRoom].floor;
+
 	texCanvas.width = map.width * 16;
 	texCanvas.height = map.height * 16;
 	data = map.layers[0].data;
@@ -90,7 +92,8 @@ var renderEntity = function (entity, x_offset, y_offset) {
 	sx -= (entity.width / 2) * cam_zoom * scale;
 	sy -= entity.height * cam_zoom * scale; // To draw at the bottom left corner
 	
-	if (sy > horizon_scanline - ( entity.height * cam_zoom * scale)){ // Culling past the horizon
+	if (sy > horizon_scanline - ( entity.height * cam_zoom * scale) && 
+		sx >= 0 && sx <= canvW){ // Culling past the horizon
 		
 		if (entity.shadow){
 			//ctx.drawImage(texture_SHADOW, sx, sy + entity.height * cam_zoom * scale * 0.95, entity.width * cam_zoom * scale, 1 * cam_zoom * scale)	
@@ -126,67 +129,100 @@ var render = function () {
 	
 	entityRenderList = [];
 	
-	if (map && redrawFlag) { // map render (top-down here, mode7 afterwards)
+	map = rooms[currentRoom].floor;
 	
-		mapCtx.clearRect(0,0,mapCanvas.width,mapCanvas.height)
-		mapCtx.fillStyle = "#000000";
-		mapCtx.fillRect(0,0,mapCanvas.width,mapCanvas.height);
-		
-		mapCtx.translate(mapOrX, mapOrY);
-		mapCtx.rotate(renderAngle);
-		
-		// transfer map from texctx to mapctx here
-		dx = tra_x_o(0, mapOrX) - mapOrX;
-		dy = tra_y_o(0, mapOrY) - mapOrY;
-		mapCtx.drawImage(texCanvas, dx, dy, map.width*16*cam_zoom, map.height*16*cam_zoom)
-		
-		redrawFlag = false;
-		mapCtx.setTransform(1, 0, 0, 1, 0, 0);
-	}
+	if (screen == "menu"){
 
-	for (i = 0; i < 420 * flat_factor; i+=flat_factor * scanline_size){ // here is the mode7 style transform from mapcanvas -> canvas
+		scrn = TileMaps.menu;
+		data = scrn.layers[0].data;
 	
-		scale = 1 + (i/640)
-		sourceY = Math.round(i/scale);
-		ctx.drawImage(mapCanvas, 0, sourceY, // source x y
-		
-		mapCanvW, 1, // source width height 
-		
-		canvOrX - (mapOrX * scale), horizon_scanline + i / flat_factor, // destination x y
+		for (var i = 0; i < data.length; i++){
+			tileVal = data[i] - 1
 
-		mapCanvW * scale, scanline_size); // destination width height
-	}
-	
-	for (i in rooms[currentRoom].entities){
-		entityRenderList.push(rooms[currentRoom].entities[i]);
-	}
-	entityRenderList.sort(compareHeightVal);
-	for (var i = 0; i < entityRenderList.length; i++){
-		renderEntity( entityRenderList[i], 0, 0);
-	}
-
-	ls = loadedSong.ch[0];
-	if (ls){
-		nowLine = 800;
-		
-		// The now line is just the midi format icon but really squashed
-		ctx.drawImage(tileset, 224, 32, 16, 16, nowLine+8, 512, 16, 128)
+			sourcex = (tileVal % 16) * 16;
+			sourcey = Math.floor(tileVal / 16) * 16;
 			
-		for (i = 0; i < ls.pitches.length; i++){
+			destx = (i % scrn.width) * 16;
+			desty = Math.floor(i / scrn.width) * 16;
 			
-			sx = -1; sy = -1;
-			dy = 1000;
-			if (ls.pitches[i] == 0){
-				sx = 128; sy = 256;
-				dy = 600;
-			}else if (ls.pitches[i] == 1){
-				sx = 160; sy = 256;
-				dy = 560;
-			}else if (ls.pitches[i] == 2){
-				sx = 144; sy = 256;
-				dy = 520;
+			ctx.drawImage(tileset,sourcex,sourcey,16,16,destx*2,desty*2,32,32)
+		}
+		
+		for (i = 0; i < rooms.length; i ++){
+			ctx.fillStyle = "#ffffff"
+			ctx.font = "24px Verdana";
+			txt = ""
+			if (roomSelect == i){
+				txt = ">"
 			}
-			ctx.drawImage(tileset,sx,sy,16,16,nowLine - ( ls.times[i] - loadedSong.time ) * 4,dy,32,32)
+			txt += rooms[i].name;
+			ctx.fillText(txt, 256, 64*i + 256);
+		}
+	
+	} else if (screen == "main"){
+	
+		if (map && redrawFlag) { // map render (top-down here, mode7 afterwards)
+		
+			mapCtx.clearRect(0,0,mapCanvas.width,mapCanvas.height)
+			mapCtx.fillStyle = "#000000";
+			mapCtx.fillRect(0,0,mapCanvas.width,mapCanvas.height);
+			
+			mapCtx.translate(mapOrX, mapOrY);
+			mapCtx.rotate(renderAngle);
+			
+			// transfer map from texctx to mapctx here
+			dx = tra_x_o(0, mapOrX) - mapOrX;
+			dy = tra_y_o(0, mapOrY) - mapOrY;
+			mapCtx.drawImage(texCanvas, dx, dy, map.width*16*cam_zoom, map.height*16*cam_zoom)
+			
+			redrawFlag = false;
+			mapCtx.setTransform(1, 0, 0, 1, 0, 0);
+		}
+
+		for (i = 0; i < 420 * flat_factor; i+=flat_factor * scanline_size){ // here is the mode7 style transform from mapcanvas -> canvas
+		
+			scale = 1 + (i/640)
+			sourceY = Math.round(i/scale);
+			ctx.drawImage(mapCanvas, 0, sourceY, // source x y
+			
+			mapCanvW, 1, // source width height 
+			
+			canvOrX - (mapOrX * scale), horizon_scanline + i / flat_factor, // destination x y
+
+			mapCanvW * scale, scanline_size); // destination width height
+		}
+		
+		for (i in rooms[currentRoom].entities){
+			entityRenderList.push(rooms[currentRoom].entities[i]);
+		}
+		entityRenderList.sort(compareHeightVal);
+		for (var i = 0; i < entityRenderList.length; i++){
+			renderEntity( entityRenderList[i], 0, 0);
+		}
+
+		ls = loadedSong.ch[0];
+		if (ls){
+			nowLine = 800;
+			
+			// The now line is just the midi format icon but really squashed
+			ctx.drawImage(tileset, 224, 32, 16, 16, nowLine+8, 512, 16, 128)
+				
+			for (i = 0; i < ls.pitches.length; i++){
+				
+				sx = -1; sy = -1;
+				dy = 1000;
+				if (ls.pitches[i] == 0){
+					sx = 128; sy = 256;
+					dy = 600;
+				}else if (ls.pitches[i] == 1){
+					sx = 160; sy = 256;
+					dy = 560;
+				}else if (ls.pitches[i] == 2){
+					sx = 144; sy = 256;
+					dy = 520;
+				}
+				ctx.drawImage(tileset,sx,sy,16,16,nowLine - ( ls.times[i] - loadedSong.time ) * 4,dy,32,32)
+			}
 		}
 	}
 }

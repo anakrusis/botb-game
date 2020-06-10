@@ -19,7 +19,7 @@ var distance = function( x1, y1, x2, y2 ) {
 
 var generateWall = function( room, startX, startY, endX, endY, height, texture, texWidth ) {
 	WIDTH = 1;
-	COL_AMT = distance( startX, startY, endX, endY ) / WIDTH
+	COL_AMT = 2 + distance( startX, startY, endX, endY ) / WIDTH
 	
 	for (i = 0; i < COL_AMT; i++) {
 		dx = ( (startX * (COL_AMT-i)) + (endX * i) ) / COL_AMT
@@ -40,12 +40,15 @@ var generateWall = function( room, startX, startY, endX, endY, height, texture, 
 
 var update = function (delta) {
 	t = 4
+	if (66 in keysDown) { // b to init sound
+		soundPlayerInit();
+		loadSong(song_TEST);
+	}
+	
 	if (65 in keysDown) { // left	
 		if (cam_unlock){
 			cam_dir -= Math.PI / 32;
 			redrawFlag = true;
-			soundPlayerInit();
-			loadSong(song_TEST);
 		}
 	}
 	if (68 in keysDown) { // right
@@ -56,19 +59,41 @@ var update = function (delta) {
 	}
 	
 	if (87 in keysDown) { // up
-		if (cam_unlock){
-			cam_y += 4 * Math.sin(cam_dir);
-			cam_x += 4 * Math.cos(cam_dir);
-			redrawFlag = true;
+		
+		if (screen == "menu"){
+			roomSelect--;
+			delete keysDown[87];
+		
+		}else if (screen == "main"){
+		
+			if (cam_unlock){
+				cam_y += 4 * Math.sin(cam_dir);
+				cam_x += 4 * Math.cos(cam_dir);
+				redrawFlag = true;
+			}
 		}
 	}
 	if (83 in keysDown) { // down
-		if (cam_unlock){
+	
+		if (screen == "menu"){
+			roomSelect++;
+			delete keysDown[83];
+		
+		}else if (cam_unlock){
 			cam_y -= 4 * Math.sin(cam_dir);
 			cam_x -= 4 * Math.cos(cam_dir);
 			redrawFlag = true;
 		}
 	}
+	if (32 in keysDown) {
+		if (screen == "menu"){
+			screen = "main";
+			currentRoom = roomSelect;
+			initMapDrawing();
+			redrawFlag = true;
+		}
+	}
+	
 	songTick();
 }
 
@@ -99,28 +124,32 @@ var init = function () {
 		delete keysDown[e.keyCode];
 	}, false);
 
-	screen = "main";
+	screen = "menu";
 	cam_unlock = true;
-	currentRoom = 0;
+	currentRoom = 1;
+	roomSelect = 0;
 	
 	rooms = []
 	for (i = 0; i < 5; i++){
 		
-		rooms[i] = {};
+		rooms[i] = {name:"Room"+i};
 		rooms[i].entities = [];
 		
 	}
 	rooms[0].floor = TileMaps.floor;
+	rooms[3].floor = TileMaps.floor;
 	
 	e = new Entity();
 	e.x = 240; e.y = 240;
-	rooms[0].entities.push( e )
+	rooms[0].entities.push( e ) // added a toadette to school
 	
-	generateWall(0, 128, 128, 372, 128, 48, 1, 192)
+	generateWall(0, 128, 128, 372, 128, 48, 1, 192) // school walls
 	generateWall(0, 128, 128, 0,   256, 48, 2, 192)
 	generateWall(0, 372, 128, 500, 256, 48, 2, 192)
 	
-	map = rooms[currentRoom].floor;
+	generateWall(3, 128, 128, 372, 128, 48, 3, 192) // factory walls
+	generateWall(3, 128, 128, 0,   256, 48, 3, 192)
+	generateWall(3, 372, 128, 500, 256, 48, 3, 192)
 
 	// main loop
 	var main = function () {
@@ -157,7 +186,7 @@ document.addEventListener('DOMContentLoaded', function(e) {
 	tileset.onload = function(){
 		init();
 		initSprites();
-		initMapDrawing();
-		redrawFlag = true;
+		//initMapDrawing();
+		redrawFlag = false;
 	}
 });
