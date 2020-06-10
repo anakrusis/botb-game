@@ -126,7 +126,7 @@ var init = function () {
 
 	screen = "menu";
 	cam_unlock = true;
-	currentRoom = 1;
+	currentRoom = 0;
 	roomSelect = 0;
 	
 	rooms = []
@@ -134,10 +134,12 @@ var init = function () {
 		
 		rooms[i] = {name:"Room"+i};
 		rooms[i].entities = [];
+		rooms[i].tileset = tileset;
+		rooms[i].floor = TileMaps.floor;
 		
 	}
-	rooms[0].floor = TileMaps.floor;
-	rooms[3].floor = TileMaps.floor;
+	rooms[1].tileset = img_TILESET2.canvas;
+	rooms[1].floor = TileMaps.forest;
 	
 	e = new Entity();
 	e.x = 240; e.y = 240;
@@ -184,9 +186,8 @@ window.onfocus = function(){
 document.addEventListener('DOMContentLoaded', function(e) {
 
 	tileset.onload = function(){
-		init();
 		initSprites();
-		//initMapDrawing();
+		init();
 		redrawFlag = false;
 	}
 });

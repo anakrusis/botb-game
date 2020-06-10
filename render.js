@@ -79,7 +79,7 @@ var initMapDrawing = function () {
 		destx = (i % map.width) * 16;
 		desty = Math.floor(i / map.width) * 16;
 		
-		texCtx.drawImage(tileset,sourcex,sourcey,16,16,destx,desty,16,16)
+		texCtx.drawImage(rooms[currentRoom].tileset,sourcex,sourcey,16,16,destx,desty,16,16)
 	}
 }
 
