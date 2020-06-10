@@ -1,5 +1,5 @@
-var flat_factor = 8;
-var horizon_scanline = 32;
+var flat_factor = 12;
+var horizon_scanline = 96;
 var scanline_size = 2;
 var renderAngle;
 
@@ -9,7 +9,7 @@ var mapCanvW = 1000;
 var mapCanvH = 640;
 
 var canvOrX = 500; // main canvas origin/x/y
-var canvOrY = 320;
+var canvOrY = 220;
 var canvW = 1000;
 var canvH = 640;
 
@@ -102,7 +102,16 @@ var renderEntity = function (entity, x_offset, y_offset) {
 		// the real drawing
 		entityCanv = spriteCanvases[entity.texture].canvas;
 		if (entityCanv){
-			ctx.drawImage(entityCanv, sx, sy, entity.width * cam_zoom * scale, entity.height * cam_zoom * scale)
+		
+			if (entity.sourceX && entity.sourceWidth){
+				ctx.drawImage(entityCanv, 
+				
+				entity.sourceX, 0, entity.sourceWidth, entityCanv.height,
+				
+				sx, sy, entity.width * cam_zoom * scale, entity.height * cam_zoom * scale)
+			}else{
+				ctx.drawImage(entityCanv, sx, sy, entity.width * cam_zoom * scale, entity.height * cam_zoom * scale)
+			}
 		}
 		//ctx.drawImage(tileset, sx, sy, entity.width * cam_zoom * scale, entity.height * cam_zoom * scale)
 	}
@@ -135,7 +144,7 @@ var render = function () {
 		mapCtx.setTransform(1, 0, 0, 1, 0, 0);
 	}
 
-	for (i = 0; i < 640 * flat_factor; i+=flat_factor * scanline_size){ // here is the mode7 style transform from mapcanvas -> canvas
+	for (i = 0; i < 420 * flat_factor; i+=flat_factor * scanline_size){ // here is the mode7 style transform from mapcanvas -> canvas
 	
 		scale = 1 + (i/640)
 		sourceY = Math.round(i/scale);
@@ -148,8 +157,8 @@ var render = function () {
 		mapCanvW * scale, scanline_size); // destination width height
 	}
 	
-	for (i in entities){
-		entityRenderList.push(entities[i]);
+	for (i in rooms[currentRoom].entities){
+		entityRenderList.push(rooms[currentRoom].entities[i]);
 	}
 	entityRenderList.sort(compareHeightVal);
 	for (var i = 0; i < entityRenderList.length; i++){
@@ -158,6 +167,11 @@ var render = function () {
 
 	ls = loadedSong.ch[0];
 	if (ls){
+		nowLine = 800;
+		
+		// The now line is just the midi format icon but really squashed
+		ctx.drawImage(tileset, 224, 32, 16, 16, nowLine+8, 512, 16, 128)
+			
 		for (i = 0; i < ls.pitches.length; i++){
 			
 			sx = -1; sy = -1;
@@ -167,15 +181,12 @@ var render = function () {
 				dy = 600;
 			}else if (ls.pitches[i] == 1){
 				sx = 160; sy = 256;
-				dy = 580;
+				dy = 560;
 			}else if (ls.pitches[i] == 2){
 				sx = 144; sy = 256;
-				dy = 560;
+				dy = 520;
 			}
-			nowLine = 800;
-			
-			ctx.fillRect(800, 520, 2, 200)
-			ctx.drawImage(tileset,sx,sy,16,16,nowLine - ( ls.times[i] - loadedSong.time ) * 3,dy,32,32)
+			ctx.drawImage(tileset,sx,sy,16,16,nowLine - ( ls.times[i] - loadedSong.time ) * 4,dy,32,32)
 		}
 	}
 }

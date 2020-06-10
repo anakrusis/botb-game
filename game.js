@@ -6,9 +6,35 @@ class Entity {
 		this.altitude = 0;
 		
 		this.texture = 0;
-		this.height = 64;
-		this.width = 48;
+		
+		this.height = 48;
+		this.width = 36;
 		this.shadow = true;
+	}
+}
+
+var distance = function( x1, y1, x2, y2 ) {
+	return Math.hypot(x2 - x1, y2 - y1);
+}
+
+var generateWall = function( room, startX, startY, endX, endY, height, texture, texWidth ) {
+	WIDTH = 1;
+	COL_AMT = distance( startX, startY, endX, endY ) / WIDTH
+	
+	for (i = 0; i < COL_AMT; i++) {
+		dx = ( (startX * (COL_AMT-i)) + (endX * i) ) / COL_AMT
+		dy = ( (startY * (COL_AMT-i)) + (endY * i) ) / COL_AMT
+			
+		e = new Entity();
+		e.x = dx; e.y = dy;
+		e.width = WIDTH; e.height = height;
+		e.texture = texture;
+		
+		// replace 1 with ( texWidth / (height/WIDTH) for repeated tiling
+		e.sourceX =  Math.floor( (i * WIDTH)  % texWidth )
+		e.sourceWidth = 1
+		
+		rooms[room].entities.push( e )
 	}
 }
 
@@ -74,13 +100,27 @@ var init = function () {
 	}, false);
 
 	screen = "main";
-	map = TileMaps.floor;
 	cam_unlock = true;
+	currentRoom = 0;
 	
-	entities = []
+	rooms = []
+	for (i = 0; i < 5; i++){
+		
+		rooms[i] = {};
+		rooms[i].entities = [];
+		
+	}
+	rooms[0].floor = TileMaps.floor;
+	
 	e = new Entity();
 	e.x = 240; e.y = 240;
-	entities.push( e )
+	rooms[0].entities.push( e )
+	
+	generateWall(0, 128, 128, 372, 128, 48, 1, 192)
+	generateWall(0, 128, 128, 0,   256, 48, 2, 192)
+	generateWall(0, 372, 128, 500, 256, 48, 2, 192)
+	
+	map = rooms[currentRoom].floor;
 
 	// main loop
 	var main = function () {

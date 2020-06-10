@@ -173,7 +173,7 @@ var songTick = function () {
 		OFFSET = 6;
 
 		loadedSong.time = Math.round(sng_TEST.currentTime * 60) + OFFSET
-		if (loadedSong.time - (OFFSET / 2) >= loadedSong.length && loadedSong.loop){
+		if (loadedSong.time - (OFFSET / 3) >= loadedSong.length && loadedSong.loop){
 			loadedSong.time = 0;
 			for (i = 0; i < CHANNELS_AMT; i++){
 				loadedSong.nextNote[i] = 0;
