@@ -131,6 +131,9 @@ var render = function () {
 	
 	map = rooms[currentRoom].floor;
 	
+	ctx.fillStyle = "#ffffff"
+	ctx.font = "24px Verdana";
+	
 	if (screen == "menu"){
 
 		scrn = TileMaps.menu;
@@ -149,8 +152,6 @@ var render = function () {
 		}
 		
 		for (i = 0; i < rooms.length; i ++){
-			ctx.fillStyle = "#ffffff"
-			ctx.font = "24px Verdana";
 			txt = ""
 			if (roomSelect == i){
 				txt = ">"
@@ -224,5 +225,7 @@ var render = function () {
 				ctx.drawImage(tileset,sx,sy,16,16,nowLine - ( ls.times[i] - loadedSong.time ) * 4,dy,32,32)
 			}
 		}
+		
+		ctx.fillText( loadedSong.nextPitch[0], 32, 32)
 	}
 }

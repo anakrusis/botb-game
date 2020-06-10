@@ -4,6 +4,8 @@ loadedSong = {
 	time:0,
 	ch: [],
 	nextNote: [],
+	nextPitch:[],
+	notesHit:[],
 	length: 0
 }
 soundInitted = false;
@@ -42,6 +44,7 @@ var loadBeatmap = function (song) {
 	for (i = 0; i < CHANNELS_AMT; i++){ // init blank channels
 		loadedSong.ch[i] = { pitches:[], times:[] };
 		loadedSong.nextNote[i] = 0;
+		loadedSong.notesHit[i] = []; // list of whether or not you've hit all the notes
 		
 		loadedSong.time = 0;
 		loadedSong.length = 0;
@@ -127,9 +130,31 @@ var loadBeatmap = function (song) {
 				}
 			}
 		}
+		
+		for (j = 0; j < loadedSong.ch[i].pitches.length; j++){
+			loadedSong.notesHit[i][j] = false;
+		}
 
 		if (time > loadedSong.length){
 			loadedSong.length = time;
+		}
+	}
+}
+
+var noteHit = function (noteVal) {
+	for (i = 0; i < CHANNELS_AMT; i++){
+		index = loadedSong.nextNote[i]
+		
+		// If the pitch of the upcoming note matches, and you are within 3 ticks of it in either direction...
+		
+		if (noteVal == loadedSong.nextPitch[i] && 
+		Math.abs(ls.times[index] - loadedSong.time) < 6){
+			break;
+			
+		// Otherwise, oof.
+			
+		}else{
+			sfx_OOF.pause(); sfx_OOF.currentTime = 0; sfx_OOF.play();
 		}
 	}
 }
@@ -141,36 +166,27 @@ var songTick = function () {
 			
 			ls = loadedSong.ch[i];
 	
-/* 			for (j=0; j < ls.pitches.length; j++){
-				if (ls.times[j] == loadedSong.time) {
-				
-					if (ls.pitches[j] == -1){ //rest
-					
-					}else{
-						sfx_MET.pause();
-						sfx_MET.currentTime = 0;
-						sfx_MET.play();
-						console.log(ls.times[j]);
-					}
-				}
-			} */
 			index = loadedSong.nextNote[i]
 			if (ls.times[index] <= loadedSong.time){
 			
 				if (ls.pitches[index] == -1){ //rest
 					
 				}else{
-					sfx_MET.pause();
+/* 					sfx_MET.pause();
 					sfx_MET.currentTime = 0;
-					sfx_MET.play();
-					console.log(ls.times[index]);
+					sfx_MET.play(); */
 				}
 			
 				loadedSong.nextNote[i]++;
+				if (ls.pitches[ loadedSong.nextNote[i] % ls.pitches.length ] != -1){ // ignoring rests for the nextpitch handler
+					loadedSong.nextPitch[i] = ls.pitches[ loadedSong.nextNote[i] % ls.pitches.length];
+				}
 			}
+			
 		}
 		
-		OFFSET = 6;
+		
+		OFFSET = 0;
 
 		loadedSong.time = Math.round(sng_TEST.currentTime * 60) + OFFSET
 		if (loadedSong.time - (OFFSET / 3) >= loadedSong.length && loadedSong.loop){

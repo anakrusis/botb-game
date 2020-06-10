@@ -40,10 +40,6 @@ var generateWall = function( room, startX, startY, endX, endY, height, texture, 
 
 var update = function (delta) {
 	t = 4
-	if (66 in keysDown) { // b to init sound
-		soundPlayerInit();
-		loadSong(song_TEST);
-	}
 	
 	if (65 in keysDown) { // left	
 		if (cam_unlock){
@@ -86,12 +82,35 @@ var update = function (delta) {
 		}
 	}
 	if (32 in keysDown) {
-		if (screen == "menu"){
-			screen = "main";
-			currentRoom = roomSelect;
-			initMapDrawing();
-			redrawFlag = true;
+		if (!space_pressed && space_released) {
+			space_pressed = true; space_released = false;
+			
+			if (screen == "menu"){
+				screen = "main";
+				currentRoom = roomSelect;
+				initMapDrawing();
+				redrawFlag = true;
+				
+				soundPlayerInit();
+				loadSong(rooms[currentRoom].song);
+			}
+			
+			space_pressed = false;
 		}
+	}
+	if (keybind_TOP in keysDown){
+		if (!c_pressed && c_released) {
+			c_pressed = true; c_released = false;
+			noteHit(2);
+		}
+		c_pressed = false;
+	}
+	
+	if (!space_pressed && 32 in keysDown == false){
+		space_released = true;
+	}
+	if (!c_pressed && keybind_TOP in keysDown == false){
+		c_released = true;
 	}
 	
 	songTick();
@@ -123,6 +142,11 @@ var init = function () {
 	addEventListener("keyup", function (e) { // when a key is unpressed
 		delete keysDown[e.keyCode];
 	}, false);
+	
+	space_pressed = false; space_released = true;
+	z_pressed = false;     z_released = true;
+	x_pressed = false;     x_released = true;
+	c_pressed = false;     c_released = true;
 
 	screen = "menu";
 	cam_unlock = true;
@@ -136,6 +160,7 @@ var init = function () {
 		rooms[i].entities = [];
 		rooms[i].tileset = tileset;
 		rooms[i].floor = TileMaps.floor;
+		rooms[i].song = song_TEST;
 		
 	}
 	rooms[1].tileset = img_TILESET2.canvas;
