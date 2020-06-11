@@ -19,23 +19,25 @@ var soundPlayerInit = function () {
 		
 		sfx_MET = new Audio(); sfx_MET.src = "sfx/met.ogg";
 		sfx_OOF = new Audio(); sfx_OOF.src = "sfx/oof.ogg";
-		
-		sng_TEST = new Audio(); sng_TEST.src = "songs/tutorial.ogg";
+		songPlaying = new Audio();
+		//sng_TEST = new Audio(); sng_TEST.src = "songs/tutorial.ogg"; // todo dynamically do this on loadSong,
+		// save string source in song data
 	}
 }
 
 var loadSong = function (song) {
 
 	loadBeatmap(song);
-	playSong();
+	playSong(song);
 
 }
 
-function playSong() {
+function playSong(song) {
 	if (soundInitted){
-		sng_TEST.pause();
-		sng_TEST.currentTime = 0;
-		sng_TEST.play();                       
+		songPlaying = new Audio(); songPlaying.src = song.src;
+		songPlaying.pause();
+		songPlaying.currentTime = 0;
+		songPlaying.play();                       
 	}			
 }
 
@@ -145,10 +147,12 @@ var noteHit = function (noteVal) {
 	for (i = 0; i < CHANNELS_AMT; i++){
 		index = loadedSong.nextNote[i]
 		
-		// If the pitch of the upcoming note matches, and you are within 3 ticks of it in either direction...
+		// If the pitch of the upcoming note matches, and you are within THRESHOLD ticks of it in either direction...
+		
+		THRESHOLD = 15;
 		
 		if (noteVal == loadedSong.nextPitch[i] && 
-		Math.abs(ls.times[index] - loadedSong.time) < 6){
+		Math.abs(ls.times[index] - loadedSong.time) < THRESHOLD){
 			break;
 			
 		// Otherwise, oof.
@@ -172,9 +176,9 @@ var songTick = function () {
 				if (ls.pitches[index] == -1){ //rest
 					
 				}else{
-/* 					sfx_MET.pause();
+					sfx_MET.pause();
 					sfx_MET.currentTime = 0;
-					sfx_MET.play(); */
+					sfx_MET.play();
 				}
 			
 				loadedSong.nextNote[i]++;
@@ -188,13 +192,13 @@ var songTick = function () {
 		
 		OFFSET = 0;
 
-		loadedSong.time = Math.round(sng_TEST.currentTime * 60) + OFFSET
-		if (loadedSong.time - (OFFSET / 3) >= loadedSong.length && loadedSong.loop){
+		loadedSong.time = Math.round(songPlaying.currentTime * 60) + OFFSET
+		if (loadedSong.time - (OFFSET / 3) >= loadedSong.length - 3 && loadedSong.loop){
 			loadedSong.time = 0;
 			for (i = 0; i < CHANNELS_AMT; i++){
 				loadedSong.nextNote[i] = 0;
 			}
-			playSong()
+			songPlaying.currentTime = 0;
 		}
 	}
 }

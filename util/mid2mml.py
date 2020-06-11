@@ -8,7 +8,7 @@ path_in = sys.argv[1]
 path_out = sys.argv[2]
 
 midi_in = MidiFile(path_in)
-file_out = open(path_out, "w")
+file_out = open(path_out + ".js", "w")
 
 NOTES = ["c","c#","d","d#","e","f","f#","g","g#","a","a#","b"]
 
@@ -33,7 +33,7 @@ def main():
     track = midi_in.tracks[0]
     for msg in track:
         if (msg.type == "set_tempo"):
-            bpm = tempo2bpm(msg.tempo)
+            bpm = round(tempo2bpm(msg.tempo))
             print("Beats per minute: " + str(bpm))
 
     currentChannel = -1;
@@ -104,7 +104,7 @@ def main():
     writeFile()
 
 def writeFile():
-    file_out.write("var song = {\nspeed:1,\nloop:true,\nch:[")
+    file_out.write(path_out + " = {\nspeed:1,\nloop:false,\nsrc:'songs/level1.wav',\nch:[")
     for i in range( len(channels) ):
         file_out.write('\n"' + channels[i] + '0r",')
     file_out.write("]}")

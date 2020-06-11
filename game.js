@@ -13,6 +13,15 @@ class Entity {
 	}
 }
 
+class Event {
+	constructor( id, time ){
+		this.id = id;
+		this.time = time;
+		this.param1 = 0;
+		this.param2 = 0;
+	}
+}
+
 var distance = function( x1, y1, x2, y2 ) {
 	return Math.hypot(x2 - x1, y2 - y1);
 }
@@ -90,6 +99,7 @@ var update = function (delta) {
 				currentRoom = roomSelect;
 				initMapDrawing();
 				redrawFlag = true;
+				globalTime = 0;
 				
 				soundPlayerInit();
 				loadSong(rooms[currentRoom].song);
@@ -105,6 +115,20 @@ var update = function (delta) {
 		}
 		c_pressed = false;
 	}
+	if (keybind_MIDDLE in keysDown){
+		if (!x_pressed && x_released) {
+			x_pressed = true; x_released = false;
+			noteHit(1);
+		}
+		x_pressed = false;
+	}
+	if (keybind_BOTTOM in keysDown){
+		if (!z_pressed && z_released) {
+			z_pressed = true; z_released = false;
+			noteHit(0);
+		}
+		z_pressed = false;
+	}
 	
 	if (!space_pressed && 32 in keysDown == false){
 		space_released = true;
@@ -112,8 +136,17 @@ var update = function (delta) {
 	if (!c_pressed && keybind_TOP in keysDown == false){
 		c_released = true;
 	}
+	if (!x_pressed && keybind_MIDDLE in keysDown == false){
+		x_released = true;
+	}
+	if (!z_pressed && keybind_BOTTOM in keysDown == false){
+		z_released = true;
+	}
 	
 	songTick();
+	if (screen == "main"){
+		globalTime++;
+	}
 }
 
 var keysDown = {};
@@ -152,6 +185,7 @@ var init = function () {
 	cam_unlock = true;
 	currentRoom = 0;
 	roomSelect = 0;
+	globalTime = 0;
 	
 	rooms = []
 	for (i = 0; i < 5; i++){
@@ -165,10 +199,15 @@ var init = function () {
 	}
 	rooms[1].tileset = img_TILESET2.canvas;
 	rooms[1].floor = TileMaps.forest;
+	rooms[1].song = song_LEVEL1;
 	
 	e = new Entity();
 	e.x = 240; e.y = 240;
 	rooms[0].entities.push( e ) // added a toadette to school
+	
+	e = new Entity();
+	e.x = 240; e.y = 240; e.width = 24; e.height = 64; e.texture = 5;
+	rooms[1].entities.push( e ); // tree test
 	
 	generateWall(0, 128, 128, 372, 128, 48, 1, 192) // school walls
 	generateWall(0, 128, 128, 0,   256, 48, 2, 192)
@@ -198,13 +237,13 @@ var init = function () {
 
 window.onblur = function(){
 	if (soundInitted){
-		sng_TEST.pause();
+		songPlaying.pause();
 	}
 }
 
 window.onfocus = function(){
 	if (soundInitted){
-		sng_TEST.play();
+		songPlaying.play();
 	}
 }
 
