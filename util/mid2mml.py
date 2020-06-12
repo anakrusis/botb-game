@@ -43,12 +43,12 @@ def main():
     for msg in track:
         trackTime += msg.time
 
-        if (msg.type == "note_on"):
+        if (msg.type == "note_on" or msg.type == "note_off"):
 
             note = (msg.note % 12)
             octave = math.floor(msg.note / 12) - 1
             
-            if (msg.velocity == 0): # Note release: write the note length first, then octave changes, finally the note name.
+            if (msg.velocity == 0 or msg.type == "note_off"): # Note release: write the note length first, then octave changes, finally the note name.
  
                 currentChannel = findChannel(msg.note)
                 print("Note " + NOTES[note] + " on Channel " + str(currentChannel))

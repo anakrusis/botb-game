@@ -3,6 +3,7 @@ init(){
 this.canvas = document.createElement("canvas");
 this.ctx = this.canvas.getContext("2d");
 this.canvas.setAttribute("id", "img_TOADETTE");
+this.canvas.setAttribute("style", "display:none;");
 this.canvas.width = 128; this.canvas.height = 128;
 document.body.appendChild(this.canvas );
 this.ctx.drawImage(tileset, -1, -1, 1, 1, 0, 0, 1, 1);

@@ -201,7 +201,7 @@ var init = function () {
 	roomSelect = 0;
 	globalTime = 0;
 	
-	unlocked = [true, true, false, false, false];
+	unlocked = [true, true, true, true, true, true];
 	
 	resluts = [];
 	
@@ -264,10 +264,11 @@ var loadRoom = function( roomID ) {
 		
 	soundPlayerInit();
 	loadSong(rooms[currentRoom].song);
+	playSFX(rooms[currentRoom].dialogStart);
 }
 
 var onResluts = function() {
-	screen = screen_RESLUTS;
+	//screen = screen_RESLUTS;
 	songPlaying.pause();
 	
 	score = loadedSong.liek / (loadedSong.liek + loadedSong.haeit) * 35;
@@ -283,17 +284,30 @@ var onResluts = function() {
 		screen_RESLUTS.elements.push ( bt );
 	}
 	
-	nextButton = new Button ( 16, 560, "Next stage"); nextButton.width = 144;
+	nextButton = new Button ( 16, 560, "Next battle"); nextButton.width = 144;
 	menuButton = new Button ( 840, 560, "Menu"); menuButton.width = 128;
 	menuButton.onClick = function(){ screen = screen_MENU; }
+	
+	var dialogPlaying;
 	
 	if (score < 20){
 		nextButton.text = "Try again";
 		nextButton.onClick = function(){ loadRoom(currentRoom) };
+		
+		dialogPlaying = rooms[currentRoom].dialogBad;
+		
 	} else {
 		nextButton.onClick = function(){ loadRoom(currentRoom + 1) };
 		unlocked[currentRoom + 1] = true;
+		
+		dialogPlaying = rooms[currentRoom].dialogGood;
 	}
+	dialogPlaying.onended = function(){
+		screen = screen_RESLUTS;
+	}
+	
+	playSFX(dialogPlaying);
+	
 	if (currentRoom + 1 < rooms.length){
 	screen_RESLUTS.elements.push(nextButton);
 	};	

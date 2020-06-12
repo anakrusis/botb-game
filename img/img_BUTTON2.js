@@ -3,6 +3,7 @@ init(){
 this.canvas = document.createElement("canvas");
 this.ctx = this.canvas.getContext("2d");
 this.canvas.setAttribute("id", "img_BUTTON2");
+this.canvas.setAttribute("style", "display:none;");
 this.canvas.width = 192; this.canvas.height = 32;
 document.body.appendChild(this.canvas );
 this.ctx.drawImage(tileset, 236, 0, 1, 1, 0, 0, 1, 1);

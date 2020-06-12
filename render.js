@@ -170,6 +170,7 @@ var render = function () {
 	
 	if (screen == screen_MENU){
 		ctx.fillText(" CURRENT BATTLES", 11*32, 72);
+		ctx.font = "24px Verdana";
 		/* for (i = 0; i < rooms.length; i ++){
 			txt = ""
 			if (roomSelect == i){
@@ -238,10 +239,11 @@ var render = function () {
 		if (ls){
 			nowLine = 800;
 			
+			// barlines are just unlocked ascii badge lol
 			for (i = 0; i < 16; i++){
 				beatTime = (loadedSong.tpqn * i);
 				modTime = (loadedSong.time % (loadedSong.tpqn * 8) )
-				ctx.drawImage(tileset, 64, 304, 16, 16, 16 + nowLine - ( beatTime - modTime) * 4, 512, 4, 128); 
+				ctx.drawImage(tileset, 160, 384, 16, 16, 16 + nowLine - ( beatTime - modTime) * 4, 512, 4, 128); 
 			}
 			
 			// The now line is just the midi format icon but really squashed

@@ -23,6 +23,7 @@ file_out.write('init(){\n')
 file_out.write('this.canvas = document.createElement("canvas");\n')
 file_out.write('this.ctx = this.canvas.getContext("2d");\n')
 file_out.write('this.canvas.setAttribute("id", "' + canvasName + '");\n')
+file_out.write('this.canvas.setAttribute("style", "display:none;");')
 file_out.write('this.canvas.width = ' + str(width) + '; ' + 'this.canvas.height = ' + str(height) + ";\n")
 file_out.write("document.body.appendChild(" + "this.canvas );\n")
 

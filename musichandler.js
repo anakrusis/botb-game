@@ -11,25 +11,27 @@ loadedSong = {
 }
 soundInitted = false;
 
+sfx_MET = new Audio(); sfx_MET.src = "sfx/met.ogg";
+sfx_OOF1 = new Audio(); sfx_OOF1.src = "sfx/oof1.ogg"; sfx_OOF1.volume = 0.5;
+sfx_OOF2 = new Audio(); sfx_OOF2.src = "sfx/oof2.ogg"; sfx_OOF2.volume = 0.5;
+sfx_OOF3 = new Audio(); sfx_OOF3.src = "sfx/oof3.ogg"; sfx_OOF3.volume = 0.5;
+
+sfx_OPM1 = new Audio(); sfx_OPM1.src = "sfx/opm1.ogg";
+sfx_OPM2 = new Audio(); sfx_OPM2.src = "sfx/opm2.ogg";
+sfx_OPM3 = new Audio(); sfx_OPM3.src = "sfx/opm3.ogg";
+sfx_OPM4 = new Audio(); sfx_OPM4.src = "sfx/opm4.ogg";
+
+sfx_KLEEDER1 = new Audio(); sfx_KLEEDER1.src = "sfx/kleeder1.ogg";
+sfx_KLEEDER2 = new Audio(); sfx_KLEEDER2.src = "sfx/kleeder2.ogg";
+sfx_KLEEDER3 = new Audio(); sfx_KLEEDER3.src = "sfx/kleeder3.ogg";
+sfx_KLEEDER4 = new Audio(); sfx_KLEEDER4.src = "sfx/kleeder4.ogg";
+
 var soundPlayerInit = function () {
 
 	if (!soundInitted){
 		soundInitted = true;
 		
 		audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-		
-		sfx_MET = new Audio(); sfx_MET.src = "sfx/met.ogg";
-		sfx_OOF1 = new Audio(); sfx_OOF1.src = "sfx/oof1.ogg"; sfx_OOF1.volume = 0.5;
-		sfx_OOF2 = new Audio(); sfx_OOF2.src = "sfx/oof2.ogg"; sfx_OOF2.volume = 0.5;
-		sfx_OOF3 = new Audio(); sfx_OOF3.src = "sfx/oof3.ogg"; sfx_OOF3.volume = 0.5;
-		
-		sfx_OPM1 = new Audio(); sfx_OPM1.src = "sfx/opm1.ogg";
-		sfx_OPM2 = new Audio(); sfx_OPM2.src = "sfx/opm2.ogg";
-		
-		sfx_KLEEDER1 = new Audio(); sfx_KLEEDER1.src = "sfx/kleeder1.ogg";
-		sfx_KLEEDER2 = new Audio(); sfx_KLEEDER2.src = "sfx/kleeder2.ogg";
-		sfx_KLEEDER3 = new Audio(); sfx_KLEEDER3.src = "sfx/kleeder3.ogg";
-		sfx_KLEEDER4 = new Audio(); sfx_KLEEDER4.src = "sfx/kleeder4.ogg";
 		
 		songPlaying = new Audio();
 		//sng_TEST = new Audio(); sng_TEST.src = "songs/tutorial.ogg"; // todo dynamically do this on loadSong,
@@ -52,11 +54,11 @@ function playSFX ( sfx1, sfx2, sfx3 ) {
 		sfx3.currentTime = 0; sfx3.play();
 		
 	}else if (sfx2 && rand > 0.33){
-		sfx1.pause(); sfx2.pause(); sfx3.pause();
+		sfx1.pause(); sfx2.pause();
 		sfx2.currentTime = 0; sfx2.play();
 		
 	}else{
-		sfx1.pause(); sfx2.pause(); sfx3.pause(); 
+		sfx1.pause();
 		sfx1.currentTime = 0; sfx1.play();
 	}
 }
@@ -66,7 +68,11 @@ function playSong(song) {
 		songPlaying = new Audio(); songPlaying.src = song.src;
 		songPlaying.pause();
 		songPlaying.currentTime = 0;
-		songPlaying.play();                       
+		songPlaying.play();     
+
+		songPlaying.onended = function(){
+			onResluts();
+		}
 	}			
 }
 
@@ -260,7 +266,7 @@ var songTick = function () {
 				songPlaying.currentTime = 0;
 				
 			} else {
-				onResluts();
+				//onResluts();
 			}
 		}
 	}
