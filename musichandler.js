@@ -1,4 +1,4 @@
-CHANNELS_AMT = 3;
+CHANNELS_AMT = 1;
 
 loadedSong = {
 	time:0,
@@ -51,6 +51,9 @@ var loadBeatmap = function (song) {
 		loadedSong.time = 0;
 		loadedSong.length = 0;
 		loadedSong.loop = song.loop;
+		
+		loadedSong.liek = 0;
+		loadedSong.haeit = 0; // how much you got wrong or right
 	}
 
 	for (i = 0; i < CHANNELS_AMT; i++){
@@ -134,7 +137,11 @@ var loadBeatmap = function (song) {
 		}
 		
 		for (j = 0; j < loadedSong.ch[i].pitches.length; j++){
-			loadedSong.notesHit[i][j] = false;
+			if (loadedSong.ch[i].pitches[j] == -1){
+				loadedSong.notesHit[i][j] = -1;
+			}else{
+				loadedSong.notesHit[i][j] = undefined;
+			}
 		}
 
 		if (time > loadedSong.length){
@@ -144,21 +151,33 @@ var loadBeatmap = function (song) {
 }
 
 var noteHit = function (noteVal) {
-	for (i = 0; i < CHANNELS_AMT; i++){
+	for (i = 0; i < 1; i++){
 		index = loadedSong.nextNote[i]
 		
 		// If the pitch of the upcoming note matches, and you are within THRESHOLD ticks of it in either direction...
 		
-		THRESHOLD = 15;
+		THRESHOLD = 10;
+		diff = Math.abs(ls.times[index] - loadedSong.time);
+		console.log(diff);
 		
 		if (noteVal == loadedSong.nextPitch[i] && 
-		Math.abs(ls.times[index] - loadedSong.time) < THRESHOLD){
+		diff < THRESHOLD){
+			if (loadedSong.notesHit[i][index] === undefined){
+				loadedSong.notesHit[i][index] = true;
+				loadedSong.liek++;
+			}
 			break;
+			
 			
 		// Otherwise, oof.
 			
 		}else{
 			sfx_OOF.pause(); sfx_OOF.currentTime = 0; sfx_OOF.play();
+			
+			if (loadedSong.notesHit[i][index] === undefined){
+				loadedSong.notesHit[i][index] = false;
+				loadedSong.haeit++;
+			}
 		}
 	}
 }
@@ -173,12 +192,19 @@ var songTick = function () {
 			index = loadedSong.nextNote[i]
 			if (ls.times[index] <= loadedSong.time){
 			
-				if (ls.pitches[index] == -1){ //rest
+				if (ls.pitches[index] == -1){ //rests are ignored
 					
 				}else{
-					sfx_MET.pause();
+	/* 				sfx_MET.pause();
 					sfx_MET.currentTime = 0;
-					sfx_MET.play();
+					sfx_MET.play(); */
+			
+					if (loadedSong.notesHit[i][index] === undefined){
+						loadedSong.notesHit[i][index] = false;
+						loadedSong.haeit++;
+						sfx_OOF.pause(); sfx_OOF.currentTime = 0; sfx_OOF.play();
+					}
+					
 				}
 			
 				loadedSong.nextNote[i]++;
@@ -189,11 +215,11 @@ var songTick = function () {
 			
 		}
 		
-		
-		OFFSET = 0;
+		OFFSET = -5;
+		//OFFSET = -5;
 
 		loadedSong.time = Math.round(songPlaying.currentTime * 60) + OFFSET
-		if (loadedSong.time - (OFFSET / 3) >= loadedSong.length - 3 && loadedSong.loop){
+		if (loadedSong.time >= loadedSong.length - 3 && loadedSong.loop){
 			loadedSong.time = 0;
 			for (i = 0; i < CHANNELS_AMT; i++){
 				loadedSong.nextNote[i] = 0;

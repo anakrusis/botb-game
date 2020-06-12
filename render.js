@@ -93,7 +93,7 @@ var renderEntity = function (entity, x_offset, y_offset) {
 	sy -= entity.height * cam_zoom * scale; // To draw at the bottom left corner
 	
 	if (sy > horizon_scanline - ( entity.height * cam_zoom * scale) && 
-		sx >= 0 && sx <= canvW){ // Culling past the horizon
+		sx >= 0-(entity.width*cam_zoom*scale) && sx <= canvW){ // Culling past the horizon
 		
 		if (entity.shadow){
 			//ctx.drawImage(texture_SHADOW, sx, sy + entity.height * cam_zoom * scale * 0.95, entity.width * cam_zoom * scale, 1 * cam_zoom * scale)	
@@ -103,16 +103,32 @@ var renderEntity = function (entity, x_offset, y_offset) {
 			sy -= (entity.altitude * cam_zoom * scale);
 		}
 		// the real drawing
-		entityCanv = spriteCanvases[entity.texture].canvas;
+		if (entity.texture == tileset){
+			entityCanv = tileset;
+		}else{
+			entityCanv = spriteCanvases[entity.texture].canvas;
+		}
 		if (entityCanv){
 		
 			if (entity.sourceX && entity.sourceWidth){
-				ctx.drawImage(entityCanv, 
+			
+				if (entity.sourceY && entity.sourceHeight){ // entities that render based on a quad
 				
-				entity.sourceX, 0, entity.sourceWidth, entityCanv.height,
-				
-				sx, sy, entity.width * cam_zoom * scale, entity.height * cam_zoom * scale)
-			}else{
+					ctx.drawImage(entityCanv, 
+					
+					entity.sourceX, entity.sourceY, entity.sourceWidth, entity.sourceHeight,
+					
+					sx, sy, entity.width * cam_zoom * scale, entity.height * cam_zoom * scale)
+					
+					
+				}else{                          // used for walls (horizontal stripes, full vertical span)
+					ctx.drawImage(entityCanv, 
+					
+					entity.sourceX, 0, entity.sourceWidth, entityCanv.height,
+					
+					sx, sy, entity.width * cam_zoom * scale, entity.height * cam_zoom * scale)
+				}
+			}else{ // uses the whole texture ( some entities, etc)
 				ctx.drawImage(entityCanv, sx, sy, entity.width * cam_zoom * scale, entity.height * cam_zoom * scale)
 			}
 		}
@@ -201,6 +217,7 @@ var render = function () {
 			renderEntity( entityRenderList[i], 0, 0);
 		}
 
+		// the notes
 		ls = loadedSong.ch[0];
 		if (ls){
 			nowLine = 800;
@@ -225,6 +242,13 @@ var render = function () {
 				ctx.drawImage(tileset,sx,sy,16,16,nowLine - ( ls.times[i] - loadedSong.time ) * 4,dy,32,32)
 			}
 		}
+		
+		// liek-haeit counter
+		ctx.drawImage(tileset, 243, 96, 10, 10, canvW - 64, 256, 40, 40)
+		ctx.drawImage(tileset, 217, 115, 10, 10, canvW - 64, 320, 40, 40)
+		
+		ctx.fillText( loadedSong.liek, canvW - 128, 256)
+		ctx.fillText( loadedSong.haeit, canvW - 128, 320)
 		
 		ctx.fillText( loadedSong.nextPitch[0], 32, 32)
 	}

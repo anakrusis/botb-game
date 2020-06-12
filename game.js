@@ -7,8 +7,8 @@ class Entity {
 		
 		this.texture = 0;
 		
-		this.height = 48;
-		this.width = 36;
+		this.height = 64;
+		this.width = 64;
 		this.shadow = true;
 	}
 }
@@ -49,6 +49,14 @@ var generateWall = function( room, startX, startY, endX, endY, height, texture, 
 
 var update = function (delta) {
 	t = 4
+	
+	if (66 in keysDown){
+		if (soundInitted){
+			loadedSong.time = loadedSong.ch[0].times[1];
+			songPlaying.currentTime = loadedSong.ch[0].times[1] / 60;
+			loadedSong.nextNote[0] = 0;
+		}
+	}
 	
 	if (65 in keysDown) { // left	
 		if (cam_unlock){
@@ -197,17 +205,37 @@ var init = function () {
 		rooms[i].song = song_TEST;
 		
 	}
+	rooms[0].tileset = img_TILESET2.canvas;
+	rooms[0].floor = TileMaps.school;
+	
 	rooms[1].tileset = img_TILESET2.canvas;
 	rooms[1].floor = TileMaps.forest;
 	rooms[1].song = song_LEVEL1;
 	
 	e = new Entity();
-	e.x = 240; e.y = 240;
+	e.x = 240; e.y = 240;e.texture=7;
 	rooms[0].entities.push( e ) // added a toadette to school
 	
 	e = new Entity();
-	e.x = 240; e.y = 240; e.width = 24; e.height = 64; e.texture = 5;
-	rooms[1].entities.push( e ); // tree test
+	e.x = 240; e.y = 240;e.texture=6;
+	rooms[1].entities.push( e ) // added a miau to forest
+	
+	for (i = 0; i < 8; i++){
+		e = new Entity();
+		e.x = 64 + i * 64; e.y = 128 + (Math.sin(i) * 64); e.width = 24; e.height = 64; e.texture = 5;
+		rooms[1].entities.push( e ); // tree test
+		
+		e = new Entity();
+		e.x = 64 + i * 64; e.y = 320 + (Math.sin(i) * 64); e.width = 24; e.height = 64; e.texture = 5;
+		rooms[1].entities.push( e ); // tree test
+		
+		e = new Entity();
+		e.x = Math.random() * 512; e.y = Math.random() * 512;
+		e.texture = tileset; e.width = 8; e.height = 8;
+		e.sourceWidth = 16; e.sourceHeight = 16;
+		e.sourceX = 128; e.sourceY = 48;
+		rooms[1].entities.push( e ); // mushroom test
+	}
 	
 	generateWall(0, 128, 128, 372, 128, 48, 1, 192) // school walls
 	generateWall(0, 128, 128, 0,   256, 48, 2, 192)
