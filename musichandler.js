@@ -6,7 +6,8 @@ loadedSong = {
 	nextNote: [],
 	nextPitch:[],
 	notesHit:[],
-	length: 0
+	length: 0,
+	tpqn: 0 // TICKS PER QUARTER NOTE (calculated automatically)
 }
 soundInitted = false;
 
@@ -24,6 +25,11 @@ var soundPlayerInit = function () {
 		
 		sfx_OPM1 = new Audio(); sfx_OPM1.src = "sfx/opm1.ogg";
 		sfx_OPM2 = new Audio(); sfx_OPM2.src = "sfx/opm2.ogg";
+		
+		sfx_KLEEDER1 = new Audio(); sfx_KLEEDER1.src = "sfx/kleeder1.ogg";
+		sfx_KLEEDER2 = new Audio(); sfx_KLEEDER2.src = "sfx/kleeder2.ogg";
+		sfx_KLEEDER3 = new Audio(); sfx_KLEEDER3.src = "sfx/kleeder3.ogg";
+		sfx_KLEEDER4 = new Audio(); sfx_KLEEDER4.src = "sfx/kleeder4.ogg";
 		
 		songPlaying = new Audio();
 		//sng_TEST = new Audio(); sng_TEST.src = "songs/tutorial.ogg"; // todo dynamically do this on loadSong,
@@ -77,6 +83,8 @@ var loadBeatmap = function (song) {
 		
 		loadedSong.liek = 0;
 		loadedSong.haeit = 0; // how much you got wrong or right
+		
+		loadedSong.tpqn = 60 / ( song.bpm / 60 );
 	}
 
 	for (i = 0; i < CHANNELS_AMT; i++){

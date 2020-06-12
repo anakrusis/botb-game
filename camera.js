@@ -6,6 +6,11 @@ var cameraSpeed = 1;
 originx = 320
 originy = 320
 
+var cam_destX = 0;
+var cam_destY = 0;
+var cam_destDir = 0;
+var cam_destTime = 0;
+
 var tra_x = function(x){ // translate x based on camera values
 	return ((x-cam_x)*cam_zoom)+originx
 }
@@ -28,4 +33,15 @@ var rot_x = function(angle,x,y){
 
 var rot_y = function(angle,x,y){
 	return x * Math.sin(angle) + y * Math.cos(angle) // and a Y val
+}
+
+var setCamPos = function ( x, y, dir ){
+	cam_x = x; cam_y = y; cam_dir = dir;
+}
+
+var setCamDest = function( x, y, dir, time ){
+	cam_destX = x;
+	cam_destY = y;
+	cam_destDir = dir;
+	cam_destTime = time;
 }

@@ -238,8 +238,14 @@ var render = function () {
 		if (ls){
 			nowLine = 800;
 			
+			for (i = 0; i < 16; i++){
+				beatTime = (loadedSong.tpqn * i);
+				modTime = (loadedSong.time % (loadedSong.tpqn * 8) )
+				ctx.drawImage(tileset, 64, 304, 16, 16, 16 + nowLine - ( beatTime - modTime) * 4, 512, 4, 128); 
+			}
+			
 			// The now line is just the midi format icon but really squashed
-			ctx.drawImage(tileset, 224, 32, 16, 16, nowLine+8, 512, 16, 128)
+			ctx.drawImage(tileset, 224, 32, 16, 16, nowLine+16, 512, 16, 128)
 				
 			for (i = 0; i < ls.pitches.length; i++){
 				
@@ -263,8 +269,8 @@ var render = function () {
 		ctx.drawImage(tileset, 243, 96, 10, 10, canvW - 64, 256, 40, 40)
 		ctx.drawImage(tileset, 217, 115, 10, 10, canvW - 64, 320, 40, 40)
 		
-		ctx.fillText( loadedSong.liek, canvW - 128, 256)
-		ctx.fillText( loadedSong.haeit, canvW - 128, 320)
+		ctx.fillText( loadedSong.liek, canvW - 128, 286)
+		ctx.fillText( loadedSong.haeit, canvW - 128, 350)
 		
 		ctx.fillText( loadedSong.nextPitch[0], 32, 32)
 	}
@@ -273,8 +279,17 @@ var render = function () {
 	
 	for (i = 0; i < screen.elements.length; i++){
 		btn = screen.elements[i];
-		ctx.drawImage(img_BUTTON.canvas, btn.x, btn.y, btn.width, btn.height);
-		ctx.fillText(btn.text, btn.x+8, btn.y+40);
+		if (!unlocked[i] && screen == screen_MENU){
+			imag = img_BUTTON2;
+			ctx.drawImage(imag.canvas, btn.x, btn.y, btn.width, btn.height);
+			ctx.fillText("Locked", btn.x+8, btn.y+40);
+			
+		}else{
+			
+			imag = img_BUTTON;
+			ctx.drawImage(imag.canvas, btn.x, btn.y, btn.width, btn.height);
+			ctx.fillText(btn.text, btn.x+8, btn.y+40);
+		}
 	}
 	
 	if (screen == screen_RESLUTS){

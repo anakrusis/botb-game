@@ -1,18 +1,3 @@
-class Entity {
-	constructor(){
-		this.name = "Entity";
-		this.x = 0;
-		this.y = 0;
-		this.altitude = 0;
-		
-		this.texture = 0;
-		
-		this.height = 64;
-		this.width = 64;
-		this.shadow = true;
-	}
-}
-
 class Button {
 	constructor ( x, y, text ){
 		this.x = x;
@@ -66,27 +51,6 @@ class Resluts {
 
 var distance = function( x1, y1, x2, y2 ) {
 	return Math.hypot(x2 - x1, y2 - y1);
-}
-
-var generateWall = function( room, startX, startY, endX, endY, height, texture, texWidth ) {
-	WIDTH = 1;
-	COL_AMT = 2 + distance( startX, startY, endX, endY ) / WIDTH
-	
-	for (i = 0; i < COL_AMT; i++) {
-		dx = ( (startX * (COL_AMT-i)) + (endX * i) ) / COL_AMT
-		dy = ( (startY * (COL_AMT-i)) + (endY * i) ) / COL_AMT
-			
-		e = new Entity();
-		e.x = dx; e.y = dy;
-		e.width = WIDTH; e.height = height;
-		e.texture = texture;
-		
-		// replace 1 with ( texWidth / (height/WIDTH) for repeated tiling
-		e.sourceX =  Math.floor( (i * WIDTH)  % texWidth )
-		e.sourceWidth = 1
-		
-		rooms[room].entities.push( e )
-	}
 }
 
 var update = function (delta) {
@@ -237,7 +201,7 @@ var init = function () {
 	roomSelect = 0;
 	globalTime = 0;
 	
-	unlocked = [true, false, false, false, false];
+	unlocked = [true, true, false, false, false];
 	
 	resluts = [];
 	
@@ -263,7 +227,9 @@ var init = function () {
 		bt = new Button ( 256, 172 + i*72, rooms[i].name )
 		
 		bt.onClick = function () {
-			loadRoom(i);
+			if (unlocked[i]){
+				loadRoom(i);
+			}
 		}
 		
 		screen_MENU.elements.push ( bt );
@@ -326,9 +292,12 @@ var onResluts = function() {
 		nextButton.onClick = function(){ loadRoom(currentRoom) };
 	} else {
 		nextButton.onClick = function(){ loadRoom(currentRoom + 1) };
+		unlocked[currentRoom + 1] = true;
 	}
-	
-	screen_RESLUTS.elements.push(nextButton); screen_RESLUTS.elements.push(menuButton);
+	if (currentRoom + 1 < rooms.length){
+	screen_RESLUTS.elements.push(nextButton);
+	};	
+	screen_RESLUTS.elements.push(menuButton);
 }
 
 window.onblur = function(){

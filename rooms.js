@@ -30,28 +30,22 @@ var initRooms = function () {
 	rooms[4] = new Room ( "Strobe's Factory" , img_TILESET2.canvas, TileMaps.forest, song_LEVEL1 );
 	rooms[5] = new Room ( "All About the Gig" , img_TILESET2.canvas, TileMaps.forest, song_LEVEL1 );
 	
-	e = new Entity();
-	e.x = 240; e.y = 240;e.texture=7;
+	e = new Entity(240, 240);
+	e.texture = 7;
 	rooms[0].entities.push( e ) // added a toadette to school
 	
-	e = new Entity();
-	e.x = 240; e.y = 240;e.texture=6;
+	e = new Entity(240, 240);
+	e.texture = 6;
 	rooms[1].entities.push( e ) // added a miau to forest
 	
 	for (i = 0; i < 8; i++){
-		e = new Entity();
-		e.x = 64 + i * 64; e.y = 128 + (Math.sin(i) * 64); e.width = 24; e.height = 64; e.texture = 5;
+		e = new Tree(64 + i * 64, 128 + (Math.sin(i) * 64));
 		rooms[1].entities.push( e ); // tree test
 		
-		e = new Entity();
-		e.x = 64 + i * 64; e.y = 320 + (Math.sin(i) * 64); e.width = 24; e.height = 64; e.texture = 5;
+		e = new Tree(64 + i * 64, 320 + (Math.sin(i) * 64));
 		rooms[1].entities.push( e ); // tree test
 		
-		e = new Entity();
-		e.x = Math.random() * 512; e.y = Math.random() * 512;
-		e.texture = tileset; e.width = 8; e.height = 8;
-		e.sourceWidth = 16; e.sourceHeight = 16;
-		e.sourceX = 128; e.sourceY = 48;
+		e = new Mushroom(Math.random() * 512, Math.random() * 512);
 		rooms[1].entities.push( e ); // mushroom test
 	}
 	

@@ -1,4 +1,5 @@
 spriteCanvases = [];
+songs = [];
 
 keybind_BOTTOM = 90;
 keybind_MIDDLE = 88;

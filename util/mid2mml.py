@@ -22,10 +22,10 @@ pitches =   [ ] # midi note values, for matching note_on and note_offs
 available = [ ]
 
 meta = "" # A string of meta messages, such as tempo changes
-bpm = 0
 
 def main():
 
+    global bpm;
 
     ticksPerBeat = midi_in.ticks_per_beat
     print("Ticks per beat: " + str(ticksPerBeat))
@@ -104,10 +104,10 @@ def main():
     writeFile()
 
 def writeFile():
-    file_out.write(path_out + " = {\nspeed:1,\nloop:false,\nsrc:'songs/level1.wav',\nch:[")
+    file_out.write(path_out + " = {\nspeed:1,\nloop:false,\nbpm:" + str(bpm) + ",\nsrc:'songs/level1.wav',\nch:[")
     for i in range( len(channels) ):
         file_out.write('\n"' + channels[i] + '0r",')
-    file_out.write("]}")
+    file_out.write("]};\nsongs.push(" + path_out + ");")
 
 def newChannel():
     channels.append(" ")
