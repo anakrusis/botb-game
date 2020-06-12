@@ -13,11 +13,9 @@ class Room {
 }
 
 class Event {
-	constructor( id, time ){
-		this.id = id;
+	constructor( func, time ){
+		this.func = func;
 		this.time = time;
-		this.param1 = 0;
-		this.param2 = 0;
 	}
 }
 
@@ -61,8 +59,8 @@ var initRooms = function () {
 	generateWall(0, 128, 128, 0,   256, 48, 2, 192)
 	generateWall(0, 372, 128, 500, 256, 48, 2, 192)
 	
-	generateWall(3, 128, 128, 372, 128, 48, 3, 192) // factory walls
-	generateWall(3, 128, 128, 0,   256, 48, 3, 192)
-	generateWall(3, 372, 128, 500, 256, 48, 3, 192)
+	generateWall(4, 128, 128, 372, 128, 48, 3, 192) // factory walls
+	generateWall(4, 128, 128, 0,   256, 48, 3, 192)
+	generateWall(4, 372, 128, 500, 256, 48, 3, 192)
 
 }

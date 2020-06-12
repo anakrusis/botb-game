@@ -169,7 +169,7 @@ var render = function () {
 	}
 	
 	if (screen == screen_MENU){
-		ctx.fillText("STAGE SELECT", 11*32, 72);
+		ctx.fillText(" CURRENT BATTLES", 11*32, 72);
 		/* for (i = 0; i < rooms.length; i ++){
 			txt = ""
 			if (roomSelect == i){
@@ -275,5 +275,12 @@ var render = function () {
 		btn = screen.elements[i];
 		ctx.drawImage(img_BUTTON.canvas, btn.x, btn.y, btn.width, btn.height);
 		ctx.fillText(btn.text, btn.x+8, btn.y+40);
+	}
+	
+	if (screen == screen_RESLUTS){
+		ctx.drawImage(tileset, 0, 256, 16, 16, 768, 188, 32, 32) // ohb gold
+		ctx.drawImage(tileset, 16, 256, 16, 16, 768, 188 + 72, 32, 32) // ohb silver
+		ctx.drawImage(tileset, 240, 240, 16, 16, 768, 188 + 72 + 72, 32, 32) // ohb bronze
+		ctx.drawImage(tileset, 140, 128, 16, 16, 768, 188 + 72 + 72 + 72, 32, 32) // ohb tincan
 	}
 }

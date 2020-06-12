@@ -18,7 +18,13 @@ var soundPlayerInit = function () {
 		audioCtx = new (window.AudioContext || window.webkitAudioContext)();
 		
 		sfx_MET = new Audio(); sfx_MET.src = "sfx/met.ogg";
-		sfx_OOF = new Audio(); sfx_OOF.src = "sfx/oof.ogg";
+		sfx_OOF1 = new Audio(); sfx_OOF1.src = "sfx/oof1.ogg"; sfx_OOF1.volume = 0.5;
+		sfx_OOF2 = new Audio(); sfx_OOF2.src = "sfx/oof2.ogg"; sfx_OOF2.volume = 0.5;
+		sfx_OOF3 = new Audio(); sfx_OOF3.src = "sfx/oof3.ogg"; sfx_OOF3.volume = 0.5;
+		
+		sfx_OPM1 = new Audio(); sfx_OPM1.src = "sfx/opm1.ogg";
+		sfx_OPM2 = new Audio(); sfx_OPM2.src = "sfx/opm2.ogg";
+		
 		songPlaying = new Audio();
 		//sng_TEST = new Audio(); sng_TEST.src = "songs/tutorial.ogg"; // todo dynamically do this on loadSong,
 		// save string source in song data
@@ -30,6 +36,23 @@ var loadSong = function (song) {
 	loadBeatmap(song);
 	playSong(song);
 
+}
+
+// sfx playing with up to 3 different possible ones
+function playSFX ( sfx1, sfx2, sfx3 ) {
+	rand = Math.random();
+	if (sfx3 && rand > 0.66){
+		sfx1.pause(); sfx2.pause(); sfx3.pause();
+		sfx3.currentTime = 0; sfx3.play();
+		
+	}else if (sfx2 && rand > 0.33){
+		sfx1.pause(); sfx2.pause(); sfx3.pause();
+		sfx2.currentTime = 0; sfx2.play();
+		
+	}else{
+		sfx1.pause(); sfx2.pause(); sfx3.pause(); 
+		sfx1.currentTime = 0; sfx1.play();
+	}
 }
 
 function playSong(song) {
@@ -172,7 +195,7 @@ var noteHit = function (noteVal) {
 		// Otherwise, oof.
 			
 		}else{
-			sfx_OOF.pause(); sfx_OOF.currentTime = 0; sfx_OOF.play();
+			playSFX(sfx_OOF1, sfx_OOF2, sfx_OOF3);
 			
 			if (loadedSong.notesHit[i][index] === undefined){
 				loadedSong.notesHit[i][index] = false;
@@ -202,7 +225,7 @@ var songTick = function () {
 					if (loadedSong.notesHit[i][index] === undefined){
 						loadedSong.notesHit[i][index] = false;
 						loadedSong.haeit++;
-						sfx_OOF.pause(); sfx_OOF.currentTime = 0; sfx_OOF.play();
+						playSFX(sfx_OOF1, sfx_OOF2, sfx_OOF3);
 					}
 					
 				}

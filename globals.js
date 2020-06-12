@@ -6,7 +6,7 @@ keybind_TOP    = 67;
 
 BOTBR_NAME_PARODIES = [
 
-"keffeine", "moopoodle", "Cooler", "AfraidOfNightfall", "YouI", "NotSoNewUser", "Upchuck8",
+"keffeine", "moopoodle", "Cooler", "AfraidOfNightfall", "YouI", "NotSoNewUser", "Regurgit8",
 "Abc", "thursday", "WildchipWinna", "ibi", "Aoi", "skelebasher", "Squidward", "Maxwell", "Clinic Kid",
 "Loadstate", "Aqualax", "TenryuuFan", "Ce-ru-lean-a", "tingle", "DCAlFine", "WonderfulOink", "dpcm",
 "roti", "Private Restroom", "carbonate", "ImACatMan", "Modus Tollens", "deep sleep", "tennessee", "emailia" 

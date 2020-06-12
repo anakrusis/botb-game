@@ -263,14 +263,7 @@ var init = function () {
 		bt = new Button ( 256, 172 + i*72, rooms[i].name )
 		
 		bt.onClick = function () {
-			screen = screen_MAIN;
-			currentRoom = i;
-			initMapDrawing();
-			redrawFlag = true;
-			globalTime = 0;
-				
-			soundPlayerInit();
-			loadSong(rooms[currentRoom].song);
+			loadRoom(i);
 		}
 		
 		screen_MENU.elements.push ( bt );
@@ -296,11 +289,24 @@ var init = function () {
 	main();
 }
 
+var loadRoom = function( roomID ) {
+	screen = screen_MAIN;
+	currentRoom = roomID;
+	initMapDrawing();
+	redrawFlag = true;
+	globalTime = 0;
+		
+	soundPlayerInit();
+	loadSong(rooms[currentRoom].song);
+}
+
 var onResluts = function() {
 	screen = screen_RESLUTS;
 	songPlaying.pause();
 	
 	score = loadedSong.liek / (loadedSong.liek + loadedSong.haeit) * 35;
+	if (loadedSong.liek + loadedSong.haeit == 0){ score = 0; }; // case with 0 denominator
+	
 	resluts[currentRoom] = new Resluts(score);
 	
 	screen_RESLUTS.elements = [];
@@ -314,6 +320,13 @@ var onResluts = function() {
 	nextButton = new Button ( 16, 560, "Next stage"); nextButton.width = 144;
 	menuButton = new Button ( 840, 560, "Menu"); menuButton.width = 128;
 	menuButton.onClick = function(){ screen = screen_MENU; }
+	
+	if (score < 20){
+		nextButton.text = "Try again";
+		nextButton.onClick = function(){ loadRoom(currentRoom) };
+	} else {
+		nextButton.onClick = function(){ loadRoom(currentRoom + 1) };
+	}
 	
 	screen_RESLUTS.elements.push(nextButton); screen_RESLUTS.elements.push(menuButton);
 }
