@@ -13,12 +13,54 @@ class Entity {
 	}
 }
 
-class Event {
-	constructor( id, time ){
-		this.id = id;
-		this.time = time;
-		this.param1 = 0;
-		this.param2 = 0;
+class Button {
+	constructor ( x, y, text ){
+		this.x = x;
+		this.y = y;
+		this.width = 512;
+		this.height = 64;
+		this.text = text;
+		
+		this.onClick = function(){};
+	}
+}
+
+class Resluts {
+	constructor( score ){
+		this.playerNames = [];
+		this.songNames = [];
+		
+		for (i = 1; i < 7; i++){
+			this.playerNames[i] = BOTBR_NAME_PARODIES[Math.floor(Math.random() * BOTBR_NAME_PARODIES.length)]
+			this.songNames[i] = SONG_NAME_PARODIES[Math.floor(Math.random() * SONG_NAME_PARODIES.length)]
+			
+			if (Math.random() > 0.99){
+				this.songNames[i] += ".ftm" // 1 percent chance of a botbr submitting an ftm to an nsf ohb
+			}else{
+				this.songNames[i] += ".nsf"
+			}
+		}
+		this.playerNames[3] = "hanna"; // Cameo appearance
+		
+		var playerIndex = -1;
+		
+		// determines if you get gold, silver, bronze, tincan or nothing
+		if (score >= 33){
+			playerIndex = 1;
+		} else if (score >= 30){
+			playerIndex = 2;
+		} else if (score >= 27){
+			playerIndex = 3;
+		} else if (score >= 24){
+			playerIndex = 4;
+		} else if (score >= 20){
+			playerIndex = 5;
+		} else{
+			playerIndex = 6;
+		}
+		
+		this.playerNames[playerIndex] = "YOU" // replace with real player name
+		//this.songNames[playerIndex] = rooms[currentRoom].name;
 	}
 }
 
@@ -51,10 +93,8 @@ var update = function (delta) {
 	t = 4
 	
 	if (66 in keysDown){
-		if (soundInitted){
-			loadedSong.time = loadedSong.ch[0].times[1];
-			songPlaying.currentTime = loadedSong.ch[0].times[1] / 60;
-			loadedSong.nextNote[0] = 0;
+		if (screen == screen_MAIN){
+			onResluts();
 		}
 	}
 	
@@ -77,13 +117,10 @@ var update = function (delta) {
 			roomSelect--;
 			delete keysDown[87];
 		
-		}else if (screen == "main"){
-		
-			if (cam_unlock){
-				cam_y += 4 * Math.sin(cam_dir);
-				cam_x += 4 * Math.cos(cam_dir);
-				redrawFlag = true;
-			}
+		}else if (cam_unlock){
+			cam_y += 4 * Math.sin(cam_dir);
+			cam_x += 4 * Math.cos(cam_dir);
+			redrawFlag = true;
 		}
 	}
 	if (83 in keysDown) { // down
@@ -101,17 +138,6 @@ var update = function (delta) {
 	if (32 in keysDown) {
 		if (!space_pressed && space_released) {
 			space_pressed = true; space_released = false;
-			
-			if (screen == "menu"){
-				screen = "main";
-				currentRoom = roomSelect;
-				initMapDrawing();
-				redrawFlag = true;
-				globalTime = 0;
-				
-				soundPlayerInit();
-				loadSong(rooms[currentRoom].song);
-			}
 			
 			space_pressed = false;
 		}
@@ -151,8 +177,8 @@ var update = function (delta) {
 		z_released = true;
 	}
 	
-	songTick();
-	if (screen == "main"){
+	if (screen == screen_MAIN){
+		songTick();
 		globalTime++;
 	}
 }
@@ -176,6 +202,23 @@ var init = function () {
 	texCtx = texCanvas.getContext("2d");
 	texCtx.imageSmoothingEnabled = false;
 	
+	canvas.addEventListener('click', function (event) {
+		// Thanks to patriques for this solution to something that shouldnt need to happen in javascript
+		const rect = canvas.getBoundingClientRect()
+		const mouseX = event.clientX - rect.left
+		const mouseY = event.clientY - rect.top
+		
+		for (i = 0; i < screen.elements.length; i++){
+			
+			btn = screen.elements[i];
+			if ( btn.x <= mouseX && mouseX <= btn.x + btn.width && 
+				 btn.y <= mouseY && mouseY <= btn.y + btn.height ){
+
+				btn.onClick();
+			}				
+		}
+	});
+	
 	addEventListener("keydown", function (e) { // when a key is pressed
 		keysDown[e.keyCode] = true;
 	}, false);
@@ -189,61 +232,51 @@ var init = function () {
 	x_pressed = false;     x_released = true;
 	c_pressed = false;     c_released = true;
 
-	screen = "menu";
 	cam_unlock = true;
 	currentRoom = 0;
 	roomSelect = 0;
 	globalTime = 0;
 	
-	rooms = []
-	for (i = 0; i < 5; i++){
-		
-		rooms[i] = {name:"Room"+i};
-		rooms[i].entities = [];
-		rooms[i].tileset = tileset;
-		rooms[i].floor = TileMaps.floor;
-		rooms[i].song = song_TEST;
+	unlocked = [true, false, false, false, false];
+	
+	resluts = [];
+	
+	initRooms();
+	
+	screen_MENU = {
+	
+		elements: []
+	
+	}
+	screen_MAIN = {
+	
+		elements: []
 		
 	}
-	rooms[0].tileset = img_TILESET2.canvas;
-	rooms[0].floor = TileMaps.school;
 	
-	rooms[1].tileset = img_TILESET2.canvas;
-	rooms[1].floor = TileMaps.forest;
-	rooms[1].song = song_LEVEL1;
-	
-	e = new Entity();
-	e.x = 240; e.y = 240;e.texture=7;
-	rooms[0].entities.push( e ) // added a toadette to school
-	
-	e = new Entity();
-	e.x = 240; e.y = 240;e.texture=6;
-	rooms[1].entities.push( e ) // added a miau to forest
-	
-	for (i = 0; i < 8; i++){
-		e = new Entity();
-		e.x = 64 + i * 64; e.y = 128 + (Math.sin(i) * 64); e.width = 24; e.height = 64; e.texture = 5;
-		rooms[1].entities.push( e ); // tree test
+	screen_RESLUTS = {
 		
-		e = new Entity();
-		e.x = 64 + i * 64; e.y = 320 + (Math.sin(i) * 64); e.width = 24; e.height = 64; e.texture = 5;
-		rooms[1].entities.push( e ); // tree test
+		elements: []
 		
-		e = new Entity();
-		e.x = Math.random() * 512; e.y = Math.random() * 512;
-		e.texture = tileset; e.width = 8; e.height = 8;
-		e.sourceWidth = 16; e.sourceHeight = 16;
-		e.sourceX = 128; e.sourceY = 48;
-		rooms[1].entities.push( e ); // mushroom test
+	}
+	for (i = 0; i < rooms.length; i++){
+		bt = new Button ( 256, 172 + i*72, rooms[i].name )
+		
+		bt.onClick = function () {
+			screen = screen_MAIN;
+			currentRoom = i;
+			initMapDrawing();
+			redrawFlag = true;
+			globalTime = 0;
+				
+			soundPlayerInit();
+			loadSong(rooms[currentRoom].song);
+		}
+		
+		screen_MENU.elements.push ( bt );
 	}
 	
-	generateWall(0, 128, 128, 372, 128, 48, 1, 192) // school walls
-	generateWall(0, 128, 128, 0,   256, 48, 2, 192)
-	generateWall(0, 372, 128, 500, 256, 48, 2, 192)
-	
-	generateWall(3, 128, 128, 372, 128, 48, 3, 192) // factory walls
-	generateWall(3, 128, 128, 0,   256, 48, 3, 192)
-	generateWall(3, 372, 128, 500, 256, 48, 3, 192)
+	screen = screen_MENU;
 
 	// main loop
 	var main = function () {
@@ -263,14 +296,36 @@ var init = function () {
 	main();
 }
 
+var onResluts = function() {
+	screen = screen_RESLUTS;
+	songPlaying.pause();
+	
+	score = loadedSong.liek / (loadedSong.liek + loadedSong.haeit) * 35;
+	resluts[currentRoom] = new Resluts(score);
+	
+	screen_RESLUTS.elements = [];
+	
+	for ( i = 1; i < 7; i++ ){
+		bt = new Button ( 192, 100 + i*72, resluts[currentRoom].playerNames[i] + " - " + resluts[currentRoom].songNames[i] );
+		bt.width = 640;
+		screen_RESLUTS.elements.push ( bt );
+	}
+	
+	nextButton = new Button ( 16, 560, "Next stage"); nextButton.width = 144;
+	menuButton = new Button ( 840, 560, "Menu"); menuButton.width = 128;
+	menuButton.onClick = function(){ screen = screen_MENU; }
+	
+	screen_RESLUTS.elements.push(nextButton); screen_RESLUTS.elements.push(menuButton);
+}
+
 window.onblur = function(){
-	if (soundInitted){
+	if (soundInitted && screen == screen_MAIN){
 		songPlaying.pause();
 	}
 }
 
 window.onfocus = function(){
-	if (soundInitted){
+	if (soundInitted && screen == screen_MAIN){
 		songPlaying.play();
 	}
 }

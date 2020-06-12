@@ -148,11 +148,11 @@ var render = function () {
 	map = rooms[currentRoom].floor;
 	
 	ctx.fillStyle = "#ffffff"
-	ctx.font = "24px Verdana";
+	ctx.font = "32px Verdana";
 	
-	if (screen == "menu"){
-
-		scrn = TileMaps.menu;
+	if (screen == screen_MENU || screen == screen_RESLUTS){
+		if (screen == screen_RESLUTS){ scrn = TileMaps.resluts; } else { scrn = TileMaps.menu; };
+		
 		data = scrn.layers[0].data;
 	
 		for (var i = 0; i < data.length; i++){
@@ -166,17 +166,33 @@ var render = function () {
 			
 			ctx.drawImage(tileset,sourcex,sourcey,16,16,destx*2,desty*2,32,32)
 		}
-		
-		for (i = 0; i < rooms.length; i ++){
+	}
+	
+	if (screen == screen_MENU){
+		ctx.fillText("STAGE SELECT", 11*32, 72);
+		/* for (i = 0; i < rooms.length; i ++){
 			txt = ""
 			if (roomSelect == i){
 				txt = ">"
 			}
 			txt += rooms[i].name;
 			ctx.fillText(txt, 256, 64*i + 256);
-		}
+		} */
+		
+	} else if (screen == screen_RESLUTS){
+		ctx.fillText(" R  E  S  L  U  T  S", 11*32, 72);
+		ctx.font = "24px Verdana";
+		round_score = Math.round(score * 100) / 100;
+		ctx.fillText("Score: " + round_score, 96, 64);
+		
+		ctx.drawImage(tileset, 243, 96, 10, 10, 800, 32, 20, 20)
+		ctx.drawImage(tileset, 217, 115, 10, 10, 864, 32, 20, 20)
+		
+		ctx.fillText( loadedSong.liek, 800, 80)
+		ctx.fillText( loadedSong.haeit, 864, 80)
+		
 	
-	} else if (screen == "main"){
+	} else if (screen == screen_MAIN){
 	
 		if (map && redrawFlag) { // map render (top-down here, mode7 afterwards)
 		
@@ -251,5 +267,13 @@ var render = function () {
 		ctx.fillText( loadedSong.haeit, canvW - 128, 320)
 		
 		ctx.fillText( loadedSong.nextPitch[0], 32, 32)
+	}
+	
+	// buttons and stuff
+	
+	for (i = 0; i < screen.elements.length; i++){
+		btn = screen.elements[i];
+		ctx.drawImage(img_BUTTON.canvas, btn.x, btn.y, btn.width, btn.height);
+		ctx.fillText(btn.text, btn.x+8, btn.y+40);
 	}
 }

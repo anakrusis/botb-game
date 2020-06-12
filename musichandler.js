@@ -158,7 +158,7 @@ var noteHit = function (noteVal) {
 		
 		THRESHOLD = 10;
 		diff = Math.abs(ls.times[index] - loadedSong.time);
-		console.log(diff);
+		//console.log(diff);
 		
 		if (noteVal == loadedSong.nextPitch[i] && 
 		diff < THRESHOLD){
@@ -219,12 +219,18 @@ var songTick = function () {
 		//OFFSET = -5;
 
 		loadedSong.time = Math.round(songPlaying.currentTime * 60) + OFFSET
-		if (loadedSong.time >= loadedSong.length - 3 && loadedSong.loop){
-			loadedSong.time = 0;
-			for (i = 0; i < CHANNELS_AMT; i++){
-				loadedSong.nextNote[i] = 0;
+		if (loadedSong.time >= loadedSong.length - 3){
+			if (loadedSong.loop){
+			
+				loadedSong.time = 0;
+				for (i = 0; i < CHANNELS_AMT; i++){
+					loadedSong.nextNote[i] = 0;
+				}
+				songPlaying.currentTime = 0;
+				
+			} else {
+				onResluts();
 			}
-			songPlaying.currentTime = 0;
 		}
 	}
 }
