@@ -34,11 +34,11 @@ class Resluts {
 			playerIndex = 1;
 		} else if (score >= 30){
 			playerIndex = 2;
-		} else if (score >= 27){
+		} else if (score >= 25){
 			playerIndex = 3;
-		} else if (score >= 24){
-			playerIndex = 4;
 		} else if (score >= 20){
+			playerIndex = 4;
+		} else if (score >= 15){
 			playerIndex = 5;
 		} else{
 			playerIndex = 6;
@@ -152,6 +152,8 @@ var update = function (delta) {
 		
 		songTick();
 		globalTime++;
+	}else{
+		if (songPlaying){ songPlaying.pause();}
 	}
 }
 
@@ -214,6 +216,7 @@ var init = function () {
 	resluts = [];
 	
 	initRooms();
+	soundPlayerInit();
 	
 	screen_MENU = {
 	
@@ -278,9 +281,8 @@ var loadRoom = function( roomID ) {
 	redrawFlag = true;
 	globalTime = 0;
 		
-	soundPlayerInit();
 	loadSong(rooms[currentRoom].song);
-	playSFX(rooms[currentRoom].dialogStart);
+	playDialog(rooms[currentRoom].dialogStart);
 }
 
 var onResluts = function() {
@@ -304,45 +306,36 @@ var onResluts = function() {
 	menuButton = new Button ( 840, 560, "Menu"); menuButton.width = 128;
 	menuButton.onClick = function(){ screen = screen_MENU; }
 	
-	var dialogPlaying;
-	
 	if (score < 20){
 		nextButton.text = "Try again";
 		nextButton.onClick = function(){ loadRoom(currentRoom) };
 		
-		dialogPlaying = rooms[currentRoom].dialogBad;
+		dialo = rooms[currentRoom].dialogBad;
 		
 	} else {
 		nextButton.onClick = function(){ loadRoom(currentRoom + 1) };
 		unlocked[currentRoom + 1] = true;
 		
-		dialogPlaying = rooms[currentRoom].dialogGood;
+		dialo = rooms[currentRoom].dialogGood;
 	}
-	if (dialogPlaying){
-		playSFX(dialogPlaying);
-		dialogPlaying.onended = function(){
+	if (dialo){
+		playDialog(dialo);
+		dialo.onended = function(){
 			screen = screen_RESLUTS;
 		}
 	}else{
 		screen = screen_RESLUTS;
 	}
 	
+	if (score > rooms[currentRoom].bestScore || rooms[currentRoom].bestScore === undefined){
+		rooms[currentRoom].bestScore = score;
+	}
+	
+	
 	if (currentRoom + 1 < rooms.length){
 	screen_RESLUTS.elements.push(nextButton);
 	};	
 	screen_RESLUTS.elements.push(menuButton);
-}
-
-window.onblur = function(){
-	if (soundInitted && screen == screen_MAIN){
-		songPlaying.pause();
-	}
-}
-
-window.onfocus = function(){
-	if (soundInitted && screen == screen_MAIN){
-		songPlaying.play();
-	}
 }
 
 document.addEventListener('DOMContentLoaded', function(e) {

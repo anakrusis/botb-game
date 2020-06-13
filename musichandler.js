@@ -34,6 +34,8 @@ var soundPlayerInit = function () {
 		audioCtx = new (window.AudioContext || window.webkitAudioContext)();
 		
 		songPlaying = new Audio();
+		dialogPlaying = new Audio();
+		sfxPlaying = new Audio();
 		//sng_TEST = new Audio(); sng_TEST.src = "songs/tutorial.ogg"; // todo dynamically do this on loadSong,
 		// save string source in song data
 	}
@@ -46,21 +48,26 @@ var loadSong = function (song) {
 
 }
 
+function playDialog ( dialog ) {
+	dialogPlaying = dialog;
+	dialogPlaying.currentTime = 0;
+	dialogPlaying.play();
+}
+
 // sfx playing with up to 3 different possible ones
 function playSFX ( sfx1, sfx2, sfx3 ) {
 	rand = Math.random();
 	if (sfx3 && rand > 0.66){
-		sfx1.pause(); sfx2.pause(); sfx3.pause();
-		sfx3.currentTime = 0; sfx3.play();
+		sfxPlaying = sfx3;
 		
 	}else if (sfx2 && rand > 0.33){
-		sfx1.pause(); sfx2.pause();
-		sfx2.currentTime = 0; sfx2.play();
+		sfxPlaying = sfx2;
 		
 	}else{
-		sfx1.pause();
-		sfx1.currentTime = 0; sfx1.play();
+		sfxPlaying = sfx1;
 	}
+	sfxPlaying.currentTime = 0;
+	sfxPlaying.play();
 }
 
 function playSong(song) {

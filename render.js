@@ -241,13 +241,13 @@ var render = function () {
 		// the notes
 		ls = loadedSong.ch[0];
 		if (ls){
-			nowLine = 800;
+			nowLine = 200;
 			
 			// barlines are just unlocked ascii badge lol
 			for (i = 0; i < 16; i++){
 				beatTime = (loadedSong.tpqn * i);
 				modTime = (loadedSong.time % (loadedSong.tpqn * 8) )
-				ctx.drawImage(tileset, 160, 384, 16, 16, 16 + nowLine - ( beatTime - modTime) * 4, 512, 4, 128); 
+				ctx.drawImage(tileset, 160, 384, 16, 16, 16 + nowLine + ( beatTime - modTime) * 4, 512, 4, 128); 
 			}
 			
 			// The now line is just the midi format icon but really squashed
@@ -267,7 +267,7 @@ var render = function () {
 					sx = 144; sy = 256;
 					dy = 520;
 				}
-				ctx.drawImage(tileset,sx,sy,16,16,nowLine - ( ls.times[i] - loadedSong.time ) * 4,dy,32,32)
+				ctx.drawImage(tileset,sx,sy,16,16,nowLine + ( ls.times[i] - loadedSong.time ) * 4,dy,32,32)
 			}
 		}
 		
@@ -306,5 +306,25 @@ var render = function () {
 		ctx.drawImage(tileset, 16, 256, 16, 16, 768, 188 + 72, 32, 32) // ohb silver
 		ctx.drawImage(tileset, 240, 240, 16, 16, 768, 188 + 72 + 72, 32, 32) // ohb bronze
 		ctx.drawImage(tileset, 140, 128, 16, 16, 768, 188 + 72 + 72 + 72, 32, 32) // ohb tincan
+	}
+	
+	if (screen == screen_MENU){
+		for (i = 0; i < rooms.length; i++ ){
+			if (rooms[i].bestScore){
+				round_score = Math.round(rooms[i].bestScore * 100) / 100;
+				
+				if (round_score >= 33){
+					ctx.drawImage(tileset, 0, 256, 16, 16, 768, 188 + 72*i, 32, 32) // ohb gold
+				} else if (round_score >= 30){
+					ctx.drawImage(tileset, 16, 256, 16, 16, 768, 188 + 72*i, 32, 32) // ohb silver
+				} else if (round_score >= 25){
+					ctx.drawImage(tileset, 240, 240, 16, 16, 768, 188 + 72*i, 32, 32) // ohb bronze
+				} else if (round_score >= 20){
+					ctx.drawImage(tileset, 140, 128, 16, 16, 768, 188 + 72*i, 32, 32) // ohb tincan
+				}
+				
+				ctx.fillText("Σ" + round_score, 700, 208+i*72);
+			}
+		}
 	}
 }

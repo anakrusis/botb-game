@@ -52,8 +52,16 @@ var initRooms = function () {
 	rooms[4] = new Room ( "All About the Gig - Hosted by YOU" , img_TILESET2.canvas, TileMaps.stage, song_LEVEL1 );
 	
 	rooms[0].setDialog(sfx_KLEEDER1, sfx_KLEEDER4, sfx_KLEEDER3);
+	rooms[0].setCaptions("Hello class, this is Teacher Kleeder. If you want to win Battle of the Bits, you must first learn how to OHB. Okay class, get out your chiptars and play the notes as they pass by on your screen.",
+	
+	"Good job. You are ready to go on a little journey. Remember these words my students: Try your best or do your worst.",
+	
+	"Ach! You can do better than that! Try it again!")
+	
+	//rooms[0].radius = 128;
 	
 	rooms[2].backgroundColor = "#7FC9FF";
+	rooms[2].radius = 128;
 	
 	rooms[3].setDialog(sfx_OPM1, sfx_OPM3, sfx_OPM4);
 	rooms[3].backgroundColor = "#7FC9FF";
@@ -87,6 +95,17 @@ var initRooms = function () {
 		e = new Mushroom(Math.random() * 512, Math.random() * 512);
 		rooms[1].entities.push( e ); // mushroom test
 	}
+	for (i = 0; i < 8; i++){
+		
+		e = new Tree(64 + i * 64, 128 + (Math.cos(i) * 64)); e.texture=15;
+		rooms[2].entities.push( e );
+		
+		e = new Tree(64 + i * 64, 320 + (Math.sin(i) * 64)); e.texture=15;
+		rooms[2].entities.push( e ); 
+		
+		e = new Mushroom(Math.random() * 512, Math.random() * 512);
+		rooms[2].entities.push( e ); 
+	}
 	
 	for (i = 0; i < 8; i++){
 		angle = i * 2 * Math.PI / 8
@@ -102,8 +121,9 @@ var initRooms = function () {
 	}
 	
 	generateWall(0, 128, 128, 372, 128, 48, 1, 192) // school walls
-	generateWall(0, 128, 128, 0,   256, 48, 2, 192)
+	generateWall(0, 128, 128, 0,   384, 48, 2, 192)
 	generateWall(0, 372, 128, 500, 192, 48, 2, 192)
+	//generateWall(0, 0, 256, 0, 384, 48, 2, 192)
 	
 	generateWall(4, 160+256, 128+256, 356+256, 128+256, 56, 12, 192) // stage walls
 	
