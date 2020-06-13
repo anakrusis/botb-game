@@ -32,12 +32,16 @@ class Resluts {
 		// determines if you get gold, silver, bronze, tincan or nothing
 		if (score >= 33){
 			playerIndex = 1;
+			
 		} else if (score >= 30){
 			playerIndex = 2;
+			
 		} else if (score >= 25){
 			playerIndex = 3;
+			
 		} else if (score >= 20){
 			playerIndex = 4;
+			
 		} else if (score >= 15){
 			playerIndex = 5;
 		} else{
@@ -106,26 +110,28 @@ var update = function (delta) {
 			space_pressed = false;
 		}
 	}
-	if (keybind_TOP in keysDown){
-		if (!c_pressed && c_released) {
-			c_pressed = true; c_released = false;
-			noteHit(2);
+	if (screen == screen_MAIN){
+		if (keybind_TOP in keysDown){
+			if (!c_pressed && c_released) {
+				c_pressed = true; c_released = false;
+				noteHit(2);
+			}
+			c_pressed = false;
 		}
-		c_pressed = false;
-	}
-	if (keybind_MIDDLE in keysDown){
-		if (!x_pressed && x_released) {
-			x_pressed = true; x_released = false;
-			noteHit(1);
+		if (keybind_MIDDLE in keysDown){
+			if (!x_pressed && x_released) {
+				x_pressed = true; x_released = false;
+				noteHit(1);
+			}
+			x_pressed = false;
 		}
-		x_pressed = false;
-	}
-	if (keybind_BOTTOM in keysDown){
-		if (!z_pressed && z_released) {
-			z_pressed = true; z_released = false;
-			noteHit(0);
+		if (keybind_BOTTOM in keysDown){
+			if (!z_pressed && z_released) {
+				z_pressed = true; z_released = false;
+				noteHit(0);
+			}
+			z_pressed = false;
 		}
-		z_pressed = false;
 	}
 	
 	if (!space_pressed && 32 in keysDown == false){
@@ -322,9 +328,11 @@ var onResluts = function() {
 		playDialog(dialo);
 		dialo.onended = function(){
 			screen = screen_RESLUTS;
+			onReslutsFanfare()
 		}
 	}else{
 		screen = screen_RESLUTS;
+		onReslutsFanfare()
 	}
 	
 	if (score > rooms[currentRoom].bestScore || rooms[currentRoom].bestScore === undefined){
@@ -346,3 +354,21 @@ document.addEventListener('DOMContentLoaded', function(e) {
 		redrawFlag = false;
 	}
 });
+
+var onReslutsFanfare = function() {
+	if (score >= 33){
+		playSFX(sfx_GOLD);
+		
+	} else if (score >= 30){
+		playSFX(sfx_SILVER);
+		
+	} else if (score >= 25){
+		playSFX(sfx_BRONZE);
+		
+	} else if (score >= 20){
+		playSFX(sfx_TINCAN);
+		
+	} else{
+		playSFX(sfx_FANFAIL);
+	}
+}

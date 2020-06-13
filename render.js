@@ -15,6 +15,9 @@ var canvH = 640;
 
 var redrawFlag = true; // this is a flag that gets set off whenever there is a change in perspective requiring a map redraw
 
+var captionsOn = false;
+var captionTxt = "";
+
 var rotatedX = function(x, y){
 	tx = tra_x_o( x, mapOrX ) - mapOrX;
 	ty = tra_y_o( y, mapOrY ) - mapOrY;
@@ -215,7 +218,7 @@ var render = function () {
 			mapCtx.setTransform(1, 0, 0, 1, 0, 0);
 		}
 
-		for (i = 0; i < 420 * flat_factor; i+=flat_factor * scanline_size){ // here is the mode7 style transform from mapcanvas -> canvas
+		for (i = 0; i < 384 * flat_factor; i+=flat_factor * scanline_size){ // here is the mode7 style transform from mapcanvas -> canvas
 		
 			scale = 1 + (i/640)
 			sourceY = Math.round(i/scale);
@@ -236,7 +239,7 @@ var render = function () {
 			renderEntity( entityRenderList[i], 0, 0);
 		}
 		
-		ctx.drawImage(tileset, 66, 0, 1, 1, 0,512,canvas.width,canvas.height);
+		ctx.drawImage(tileset, 66, 0, 1, 1, 0,480,canvas.width,canvas.height);
 
 		// the notes
 		ls = loadedSong.ch[0];
@@ -247,11 +250,11 @@ var render = function () {
 			for (i = 0; i < 16; i++){
 				beatTime = (loadedSong.tpqn * i);
 				modTime = (loadedSong.time % (loadedSong.tpqn * 8) )
-				ctx.drawImage(tileset, 160, 384, 16, 16, 16 + nowLine + ( beatTime - modTime) * 4, 512, 4, 128); 
+				ctx.drawImage(tileset, 160, 384, 16, 16, 16 + nowLine + ( beatTime - modTime) * 4, 496, 4, 128); 
 			}
 			
 			// The now line is just the midi format icon but really squashed
-			ctx.drawImage(tileset, 224, 32, 16, 16, nowLine+16, 512, 16, 128)
+			ctx.drawImage(tileset, 224, 32, 16, 16, nowLine+16, 496, 16, 128)
 				
 			for (i = 0; i < ls.pitches.length; i++){
 				
@@ -262,13 +265,18 @@ var render = function () {
 					dy = 600;
 				}else if (ls.pitches[i] == 1){
 					sx = 160; sy = 256;
-					dy = 560;
+					dy = 550;
 				}else if (ls.pitches[i] == 2){
 					sx = 144; sy = 256;
-					dy = 520;
+					dy = 500;
 				}
 				ctx.drawImage(tileset,sx,sy,16,16,nowLine + ( ls.times[i] - loadedSong.time ) * 4,dy,32,32)
 			}
+		}
+		
+		if (captionsOn && dialogPlaying){
+			captionPos = (canvW/1.5) - dialogPlaying.currentTime * 350;
+			ctx.fillText( captionTxt, captionPos, 512 )
 		}
 		
 		// liek-haeit counter
@@ -306,6 +314,27 @@ var render = function () {
 		ctx.drawImage(tileset, 16, 256, 16, 16, 768, 188 + 72, 32, 32) // ohb silver
 		ctx.drawImage(tileset, 240, 240, 16, 16, 768, 188 + 72 + 72, 32, 32) // ohb bronze
 		ctx.drawImage(tileset, 140, 128, 16, 16, 768, 188 + 72 + 72 + 72, 32, 32) // ohb tincan
+		
+		if (sfxPlaying){
+			if (!sfxPlaying.ended){
+				reslutImage = img_NOPROGRESS;
+				if (score >= 33){
+					reslutImage = img_GOLDGET;
+					
+				} else if (score >= 30){
+					reslutImage = img_SILVERGET;
+					
+				} else if (score >= 25){
+					reslutImage = img_BRONZEGET;
+					
+				} else if (score >= 20){
+					reslutImage = img_TINCANGET;
+				}
+				
+				ctx.drawImage(reslutImage.canvas, 128, 640 - sfxPlaying.currentTime * 200, 384*2, 128*2);
+				
+			}
+		}
 	}
 	
 	if (screen == screen_MENU){

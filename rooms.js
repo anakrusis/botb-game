@@ -54,7 +54,7 @@ var initRooms = function () {
 	rooms[0].setDialog(sfx_KLEEDER1, sfx_KLEEDER4, sfx_KLEEDER3);
 	rooms[0].setCaptions("Hello class, this is Teacher Kleeder. If you want to win Battle of the Bits, you must first learn how to OHB. Okay class, get out your chiptars and play the notes as they pass by on your screen.",
 	
-	"Good job. You are ready to go on a little journey. Remember these words my students: Try your best or do your worst.",
+	"Good job. You are ready to go on a little journey. Remember these words my students: Try your worst, or do your best.",
 	
 	"Ach! You can do better than that! Try it again!")
 	

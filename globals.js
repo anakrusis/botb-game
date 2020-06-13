@@ -3,7 +3,7 @@ songs = [];
 
 keybind_BOTTOM = 67;
 keybind_MIDDLE = 83;
-keybind_TOP    = 81;
+keybind_TOP    = 65;
 
 BOTBR_NAME_PARODIES = [
 

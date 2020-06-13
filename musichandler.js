@@ -26,6 +26,12 @@ sfx_KLEEDER2 = new Audio(); sfx_KLEEDER2.src = "sfx/kleeder2.ogg";
 sfx_KLEEDER3 = new Audio(); sfx_KLEEDER3.src = "sfx/kleeder3.ogg";
 sfx_KLEEDER4 = new Audio(); sfx_KLEEDER4.src = "sfx/kleeder4.ogg";
 
+sfx_GOLD = new Audio(); sfx_GOLD.src = "sfx/goldfanfare.ogg";
+sfx_SILVER = new Audio(); sfx_SILVER.src = "sfx/silverfanfare.ogg";
+sfx_BRONZE = new Audio(); sfx_BRONZE.src = "sfx/bronzefanfare.ogg";
+sfx_TINCAN = new Audio(); sfx_TINCAN.src = "sfx/tincanfanfare.ogg";
+sfx_FANFAIL = new Audio(); sfx_FANFAIL.src = "sfx/fanfail.ogg";
+
 var soundPlayerInit = function () {
 
 	if (!soundInitted){
@@ -52,6 +58,20 @@ function playDialog ( dialog ) {
 	dialogPlaying = dialog;
 	dialogPlaying.currentTime = 0;
 	dialogPlaying.play();
+	
+	if (dialogPlaying == rooms[currentRoom].dialogStart){
+		captionTxt = rooms[currentRoom].captionStart;
+	}else if ( dialogPlaying == rooms[currentRoom].dialogGood){
+		captionTxt = rooms[currentRoom].captionGood;
+	}else if ( dialogPlaying == rooms[currentRoom].dialogBad){
+		captionTxt = rooms[currentRoom].captionBad;
+	}
+	
+	captionsOn = true;
+	
+	dialogPlaying.onended = function(){
+		captionsOn = false;
+	}
 }
 
 // sfx playing with up to 3 different possible ones
