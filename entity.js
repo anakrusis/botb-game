@@ -20,7 +20,7 @@ class Entity {
 class Tree extends Entity {
 	constructor(x, y){
 		super(x, y);
-		this.width = 24; this.height = 64; this.texture = 5;
+		this.width = 32; this.height = 64; this.texture = 5;
 	}
 }
 

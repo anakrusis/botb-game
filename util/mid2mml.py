@@ -58,7 +58,7 @@ def main():
                 duration /= ticksPerBeat
                 duration /= bpm
                 duration *= 60 * 60
-                duration = math.floor(duration)
+                #duration = math.floor(duration)
                 
                 channels[currentChannel] += str(duration)
 
@@ -93,7 +93,7 @@ def main():
                 duration /= ticksPerBeat
                 duration /= bpm
                 duration *= 60 * 60
-                duration = math.floor(duration)
+                #duration = math.floor(duration)
                 
                 channels[currentChannel] += str(duration)
                 channels[currentChannel] += "r"

@@ -143,9 +143,9 @@ var loadBeatmap = function (song) {
 						
 					default:
 						fullSub = chData.substring(j);
-						if (parseInt(fullSub, 10) != NaN && !hasRhythm){
+						if (parseFloat(fullSub) != NaN && !hasRhythm){
 							
-							rhythm = parseInt(fullSub, 10) * song.speed;
+							rhythm = parseFloat(fullSub) * song.speed;
 							hasRhythm = true;
 						}
 				}

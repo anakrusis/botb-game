@@ -137,7 +137,11 @@ var renderEntity = function (entity, x_offset, y_offset) {
 }
 
 var render = function () {
-	ctx.fillStyle = "#000000";
+	if (screen == screen_MAIN){
+		ctx.fillStyle = rooms[currentRoom].backgroundColor;
+	}else{
+		ctx.fillStyle = "#000000";
+	}
 	//ctx.fillStyle = "#FF00FF"; // deastl mode
 	ctx.fillRect(0,0,canvas.width,canvas.height);
 	
@@ -170,7 +174,7 @@ var render = function () {
 	
 	if (screen == screen_MENU){
 		ctx.fillText(" CURRENT BATTLES", 11*32, 72);
-		ctx.font = "24px Verdana";
+		ctx.font = "20px Verdana";
 		/* for (i = 0; i < rooms.length; i ++){
 			txt = ""
 			if (roomSelect == i){
@@ -198,8 +202,6 @@ var render = function () {
 		if (map && redrawFlag) { // map render (top-down here, mode7 afterwards)
 		
 			mapCtx.clearRect(0,0,mapCanvas.width,mapCanvas.height)
-			mapCtx.fillStyle = "#000000";
-			mapCtx.fillRect(0,0,mapCanvas.width,mapCanvas.height);
 			
 			mapCtx.translate(mapOrX, mapOrY);
 			mapCtx.rotate(renderAngle);
@@ -233,6 +235,8 @@ var render = function () {
 		for (var i = 0; i < entityRenderList.length; i++){
 			renderEntity( entityRenderList[i], 0, 0);
 		}
+		
+		ctx.drawImage(tileset, 66, 0, 1, 1, 0,512,canvas.width,canvas.height);
 
 		// the notes
 		ls = loadedSong.ch[0];
@@ -274,7 +278,10 @@ var render = function () {
 		ctx.fillText( loadedSong.liek, canvW - 128, 286)
 		ctx.fillText( loadedSong.haeit, canvW - 128, 350)
 		
-		ctx.fillText( loadedSong.nextPitch[0], 32, 32)
+		val = 255 - globalTime
+		ctx.fillStyle = "rgba(255, 255, 255, " + val + ")";
+		ctx.fillText( rooms[currentRoom].name, 32, 56)
+		ctx.fillStyle = "#ffffff"
 	}
 	
 	// buttons and stuff

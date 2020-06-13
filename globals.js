@@ -1,9 +1,9 @@
 spriteCanvases = [];
 songs = [];
 
-keybind_BOTTOM = 90;
-keybind_MIDDLE = 88;
-keybind_TOP    = 67;
+keybind_BOTTOM = 67;
+keybind_MIDDLE = 83;
+keybind_TOP    = 81;
 
 BOTBR_NAME_PARODIES = [
 

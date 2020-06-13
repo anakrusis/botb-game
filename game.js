@@ -142,6 +142,14 @@ var update = function (delta) {
 	}
 	
 	if (screen == screen_MAIN){
+	
+		CAMSPEED = 1000;
+		RADIUS = rooms[currentRoom].radius;
+		cam_x = rooms[currentRoom].centerX + Math.cos( globalTime / CAMSPEED ) * RADIUS
+		cam_y = rooms[currentRoom].centerY + Math.sin( globalTime / CAMSPEED ) * RADIUS
+		cam_dir = Math.atan2(rooms[currentRoom].centerY - cam_y, rooms[currentRoom].centerX - cam_x);
+		redrawFlag = true;
+		
 		songTick();
 		globalTime++;
 	}
@@ -223,8 +231,14 @@ var init = function () {
 		elements: []
 		
 	}
+	
+	screen_CUSTOM = {
+		elements: []
+	}	
+	
 	for (i = 0; i < rooms.length; i++){
-		bt = new Button ( 256, 172 + i*72, rooms[i].name )
+		bt = new Button ( 192, 172 + i*72, rooms[i].name )
+		bt.width = 640;
 		
 		bt.onClick = function () {
 			if (unlocked[i]){
@@ -234,6 +248,8 @@ var init = function () {
 		
 		screen_MENU.elements.push ( bt );
 	}
+	b = new Button(400, 532, "Custom Songs..."); b.width = 256
+	screen_MENU.elements.push ( b );
 	
 	screen = screen_MENU;
 
@@ -302,11 +318,14 @@ var onResluts = function() {
 		
 		dialogPlaying = rooms[currentRoom].dialogGood;
 	}
-	dialogPlaying.onended = function(){
+	if (dialogPlaying){
+		playSFX(dialogPlaying);
+		dialogPlaying.onended = function(){
+			screen = screen_RESLUTS;
+		}
+	}else{
 		screen = screen_RESLUTS;
 	}
-	
-	playSFX(dialogPlaying);
 	
 	if (currentRoom + 1 < rooms.length){
 	screen_RESLUTS.elements.push(nextButton);
