@@ -271,13 +271,17 @@ var init = function () {
 		screen_MENU.elements.push ( bt );
 	}
 	b = new Button(400, 532, "Custom Songs..."); b.width = 256
-	screen_MENU.elements.push ( b );
+	//screen_MENU.elements.push ( b );
 	
 	b = new Button(870, 400, "Quit"); b.width = 256; b.onClick = function(){ screen = screen_MENU; };
 	
 	screen_MAIN.elements.push (b);
 	
-	screen = screen_MENU;
+	screen = screen_TITLE;
+	
+	b = new Button(400, 532, "Join BOTB"); b.width = 192; b.onClick = function(){ screen = screen_MENU; };
+	
+	screen_TITLE.elements.push (b);
 
 	// main loop
 	var main = function () {

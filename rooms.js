@@ -14,6 +14,7 @@ class Room {
 		this.dialogStart = undefined;
 		this.dialogGood = undefined;
 		this.dialogBad = undefined;
+		this.textSpeed = 350;
 		
 		this.captionStart = undefined;
 		this.captionGood = undefined;
@@ -48,7 +49,7 @@ var initRooms = function () {
 	rooms[0] = new Room ( "OHBing 101 - Hosted by kleeder", img_TILESET2.canvas, TileMaps.school, song_TUTORIAL );
 	rooms[1] = new Room ( "NES Sound Forest - Hosted by miau", img_TILESET2.canvas, TileMaps.forest, song_LEVEL1 );
 	rooms[2] = new Room ( "Vibrant Relaxing Coast - Hosted by Jakerson", img_TILESET2.canvas, TileMaps.beach, song_LEVEL2 );
-	rooms[3] = new Room ( "Pigeon Palace - Hosted by OminPigeonMaster" , img_TILESET2.canvas, TileMaps.roost, song_LEVEL3 );
+	rooms[3] = new Room ( "Sky Tower Zone - Hosted by OminPigeonMaster" , img_TILESET2.canvas, TileMaps.roost, song_LEVEL3 );
 	rooms[4] = new Room ( "All About the Gig - Hosted by YOU" , img_TILESET2.canvas, TileMaps.stage, song_LEVEL4 );
 	
 	rooms[0].setDialog(sfx_KLEEDER1, sfx_KLEEDER4, sfx_KLEEDER3);
@@ -58,9 +59,25 @@ var initRooms = function () {
 	
 	"Ach! You can do better than that! Try it again!")
 	
-	rooms[3].setCaptions("If you want to win Battle of the Bits, you're going to have to master the art of FM synthesis. You think you can handle it?", 
+	rooms[1].textSpeed = 200;
+	rooms[1].setDialog(sfx_MIAU1, sfx_MIAU2, sfx_MIAU3);
+	rooms[1].setCaptions("Hello. It's miau. I'm a demon cat and this is my SP00KY forest. Let's see how good you can SP00KY chiptune.",
 	
-	"Wow. You really modulated those frequencies nicely, n00b. Keep up the good work.",
+	"Nice job. You are becoming more adept at the Nintendo music. How about some expansion chips now?",
+	
+	"That wasn't very meowsical! Try it again from the top!")
+	
+	rooms[2].setDialog(sfx_JAKERSON, sfx_JAKERSON2, sfx_JAKERSON3);
+	rooms[2].setCaptions("[ a large sentient hand appears to be cheering you on! ]",
+	
+	"[ good job! the thumb shaped man seems to have approved of your performance. ]",
+	
+	"[ the giant thumbs up with legs seems to be telling you not to be discouraged, and to try again. ]")
+	
+	rooms[3].textSpeed = 300;
+	rooms[3].setCaptions("If you want to win Battle of the Bits, you're going to have to master the art of FM synthesis.", 
+	
+	"Wow. You really modulated those frequencies nicely, n00b. I think you're ready to beghast an OHB of your own now. Go ahead and try it!",
 	
 	"Your frequencies were not modulated enough, n00b. Try it again.");
 	
@@ -139,9 +156,9 @@ var initRooms = function () {
 	}
 	
 	generateWall(0, 128, 128, 372, 128, 48, 1, 192) // school walls
-	generateWall(0, 128, 128, 0,   384, 48, 2, 192)
+	generateWall(0, 0, 128+135, 128, 128, 48, 25, 192)
 	generateWall(0, 372, 128, 500, 192, 48, 2, 192)
-	//generateWall(0, 0, 256, 0, 384, 48, 2, 192)
+	generateWall(0, 0, 128+135, 180, 455, 48, 2, 192)
 	
 	generateWall(4, 160+256, 128+256, 356+256, 128+256, 56, 12, 192) // stage walls
 	

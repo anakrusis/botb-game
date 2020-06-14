@@ -26,6 +26,14 @@ sfx_KLEEDER2 = new Audio(); sfx_KLEEDER2.src = "sfx/kleeder2.ogg";
 sfx_KLEEDER3 = new Audio(); sfx_KLEEDER3.src = "sfx/kleeder3.ogg";
 sfx_KLEEDER4 = new Audio(); sfx_KLEEDER4.src = "sfx/kleeder4.ogg";
 
+sfx_MIAU1 = new Audio(); sfx_MIAU1.src = "sfx/miau1.ogg";
+sfx_MIAU2 = new Audio(); sfx_MIAU2.src = "sfx/miau2.ogg";
+sfx_MIAU3 = new Audio(); sfx_MIAU3.src = "sfx/miau3.ogg";
+
+sfx_JAKERSON = new Audio(); sfx_JAKERSON.src = "sfx/jakerson2.ogg";
+sfx_JAKERSON2 = new Audio(); sfx_JAKERSON2.src = "sfx/jakerson2.ogg";
+sfx_JAKERSON3 = new Audio(); sfx_JAKERSON3.src = "sfx/jakerson2.ogg";
+
 sfx_GOLD = new Audio(); sfx_GOLD.src = "sfx/goldfanfare.ogg";
 sfx_SILVER = new Audio(); sfx_SILVER.src = "sfx/silverfanfare.ogg";
 sfx_BRONZE = new Audio(); sfx_BRONZE.src = "sfx/bronzefanfare.ogg";

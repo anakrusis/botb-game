@@ -18,6 +18,10 @@ var redrawFlag = true; // this is a flag that gets set off whenever there is a c
 var captionsOn = false;
 var captionTxt = "";
 
+var titleCount = -160;
+
+var titleScanline = 0;
+
 var rotatedX = function(x, y){
 	tx = tra_x_o( x, mapOrX ) - mapOrX;
 	ty = tra_y_o( y, mapOrY ) - mapOrY;
@@ -157,8 +161,19 @@ var render = function () {
 	ctx.fillStyle = "#ffffff"
 	ctx.font = "32px Verdana";
 	
-	if (screen == screen_MENU || screen == screen_RESLUTS){
-		if (screen == screen_RESLUTS){ scrn = TileMaps.resluts; } else { scrn = TileMaps.menu; };
+	if (screen == screen_MENU || screen == screen_RESLUTS || screen == screen_TITLE){
+		if (screen == screen_RESLUTS){ 
+		
+			scrn = TileMaps.resluts; 
+			
+		} else if (screen == screen_MENU){ 
+		
+			scrn = TileMaps.menu; 
+		
+		} else {
+			
+			scrn = TileMaps.title;
+		};
 		
 		data = scrn.layers[0].data;
 	
@@ -171,8 +186,12 @@ var render = function () {
 			destx = (i % scrn.width) * 16;
 			desty = Math.floor(i / scrn.width) * 16;
 			
-			ctx.drawImage(tileset,sourcex,sourcey,16,16,destx*2,desty*2,32,32)
+			if (desty <= titleScanline){
+				ctx.drawImage(tileset,sourcex,sourcey,16,16,destx*2,desty*2,32,32)
+			}
 		}
+		titleScanline+=3;
+		titleScanline = Math.min(640, titleScanline);
 	}
 	
 	if (screen == screen_MENU){
@@ -270,12 +289,14 @@ var render = function () {
 					sx = 144; sy = 256;
 					dy = 500;
 				}
-				ctx.drawImage(tileset,sx,sy,16,16,nowLine + ( ls.times[i] - loadedSong.time ) * 4,dy,32,32)
+				if (!loadedSong.notesHit[0][i]){
+					ctx.drawImage(tileset,sx,sy,16,16,nowLine + ( ls.times[i] - loadedSong.time ) * 4,dy,32,32)
+				}
 			}
 		}
 		
 		if (captionsOn && dialogPlaying){
-			captionPos = (canvW/1.5) - dialogPlaying.currentTime * 350;
+			captionPos = (canvW/1.5) - dialogPlaying.currentTime * rooms[currentRoom].textSpeed;
 			ctx.fillText( captionTxt, captionPos, 512 )
 		}
 		
@@ -355,5 +376,12 @@ var render = function () {
 				ctx.fillText("Σ" + round_score, 688, 208+i*72);
 			}
 		}
+	}
+	
+	if (screen == screen_TITLE){
+		titleCount += 4;
+		titleCount = Math.min(titleCount, 540);
+		
+		ctx.drawImage(img_BEAT.canvas, canvW - titleCount, 384, 576, 192);
 	}
 }
