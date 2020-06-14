@@ -35,6 +35,13 @@ class Mushroom extends Entity {
 	}
 }
 
+class Cloud extends Entity {
+	constructor(x,y){
+		super(x,y);
+		this.texture = 27;  this.width = 96; this.height = 48; this.altitude = 8; this.bouncy = false;
+	}
+}
+
 var generateWall = function( room, startX, startY, endX, endY, height, texture, texWidth ) {
 	WIDTH = 1;
 	COL_AMT = 2 + distance( startX, startY, endX, endY ) / WIDTH

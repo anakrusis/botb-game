@@ -74,7 +74,7 @@ var initRooms = function () {
 	
 	"[ the giant thumbs up with legs seems to be telling you not to be discouraged, and to try again. ]")
 	
-	rooms[3].textSpeed = 300;
+	rooms[3].textSpeed = 270;
 	rooms[3].setCaptions("If you want to win Battle of the Bits, you're going to have to master the art of FM synthesis.", 
 	
 	"Wow. You really modulated those frequencies nicely, n00b. I think you're ready to beghast an OHB of your own now. Go ahead and try it!",
@@ -95,6 +95,10 @@ var initRooms = function () {
 	e = new Entity(240, 240);
 	e.texture = 10;
 	rooms[3].entities.push( e ) // added a opm
+	
+	e = new Entity(280, 280); e.texture = 28; e.width = 24; e.height = 24; rooms[3].entities.push( e );
+	e = new Entity(120, 305); e.texture = 28; e.width = 24; e.height = 24; rooms[3].entities.push( e );
+	e = new Entity(420, 240); e.texture = 28; e.width = 24; e.height = 24; rooms[3].entities.push( e );
 	
 	e = new Entity(240, 240);
 	e.texture = 7;
@@ -142,6 +146,9 @@ var initRooms = function () {
 		angle = i * 2 * Math.PI / 8
 		e = new Tree(Math.cos(angle) * 128 + 240, Math.sin(angle) * 128 + 240);
 		e.texture = 11;
+		rooms[3].entities.push( e );
+		
+		e = new Cloud(Math.cos(angle) * 256 + 240, Math.sin(angle) * 256 + 240);
 		rooms[3].entities.push( e );
 	}
 	
