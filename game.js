@@ -226,7 +226,9 @@ var init = function () {
 	roomSelect = 0;
 	globalTime = 0;
 	
-	unlocked = [true, true, true, true, true, true];
+	mighty = false;
+	
+	unlocked = [true, false, false, false, false, false];
 	
 	resluts = [];
 	
@@ -346,6 +348,10 @@ var onResluts = function() {
 	} else {
 		nextButton.onClick = function(){ loadRoom(currentRoom + 1) };
 		unlocked[currentRoom + 1] = true;
+		
+		if (currentRoom == 4){
+			mighty = true;
+		}
 		
 		dialo = rooms[currentRoom].dialogGood;
 	}

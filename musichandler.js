@@ -40,6 +40,10 @@ sfx_BRONZE = new Audio(); sfx_BRONZE.src = "sfx/bronzefanfare.ogg";
 sfx_TINCAN = new Audio(); sfx_TINCAN.src = "sfx/tincanfanfare.ogg";
 sfx_FANFAIL = new Audio(); sfx_FANFAIL.src = "sfx/fanfail.ogg";
 
+sfx_NARRATORSILENT = new Audio(); sfx_NARRATORSILENT.src = "sfx/jakerson2.ogg";
+sfx_NARRATOR1 = new Audio(); sfx_NARRATOR1.src = "sfx/narrator1.ogg";
+sfx_NARRATOR2 = new Audio(); sfx_NARRATOR2.src = "sfx/narrator2.ogg";
+
 var soundPlayerInit = function () {
 
 	if (!soundInitted){

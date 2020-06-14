@@ -195,16 +195,12 @@ var render = function () {
 	}
 	
 	if (screen == screen_MENU){
-		ctx.fillText(" CURRENT BATTLES", 11*32, 72);
+		if (mighty){
+			ctx.fillText("Thanks for playing! c:", 10.5*32, 72);
+		} else {
+			ctx.fillText(" CURRENT BATTLES", 11*32, 72);
+		}
 		ctx.font = "20px Verdana";
-		/* for (i = 0; i < rooms.length; i ++){
-			txt = ""
-			if (roomSelect == i){
-				txt = ">"
-			}
-			txt += rooms[i].name;
-			ctx.fillText(txt, 256, 64*i + 256);
-		} */
 		
 	} else if (screen == screen_RESLUTS){
 		ctx.fillText(" R  E  S  L  U  T  S", 11*32, 72);
@@ -383,5 +379,9 @@ var render = function () {
 		titleCount = Math.min(titleCount, 540);
 		
 		ctx.drawImage(img_BEAT.canvas, canvW - titleCount, 384, 576, 192);
+	}
+	
+	if (screen != screen_MAIN && mighty){
+		ctx.drawImage(tileset, 143, 96, 16, 16, 900, 32, 64, 64)
 	}
 }

@@ -91,6 +91,11 @@ var initRooms = function () {
 	rooms[3].radius = 128;
 	
 	rooms[4].centerX = 496; rooms[4].centerY = 496;
+	rooms[4].setDialog(sfx_NARRATORSILENT, sfx_NARRATOR2, sfx_NARRATOR1);
+	
+	rooms[4].setCaptions("", "You have succeeded in winning Battle of the Bits. You are now a very mighty Botbr, and you shall receive a badge that displays your mightiness.",
+	
+	"Your OHB was a boonloss, but you can always host another one next time.");
 	
 	e = new Entity(240, 240);
 	e.texture = 10;
@@ -111,6 +116,11 @@ var initRooms = function () {
 	e = new Entity(18 * 16, 22 * 16); e.texture = 21; rooms[0].entities.push(e); e.height = 32; e.width = 32;
 	
 	e = new Entity(9 * 16, 16 * 16); e.texture = 23; rooms[0].entities.push(e); e.height = 32; e.width = 32;
+	
+	
+	e = new Entity(32*16, 28*16); e.texture = 31; rooms[4].entities.push(e);
+	e = new Entity(35*16, 31*16); e.texture = 29; rooms[4].entities.push(e);
+	e = new Entity(28*16, 31*16); e.texture = 30; rooms[4].entities.push(e);
 	
 	e = new Entity(240, 240);
 	e.texture = 6;
@@ -151,14 +161,26 @@ var initRooms = function () {
 		e = new Cloud(Math.cos(angle) * 256 + 240, Math.sin(angle) * 256 + 240);
 		rooms[3].entities.push( e );
 	}
-	
-	for (i = 0; i < 32; i++){
-		e = new Entity(64 + i * 128, 640 + (Math.sin(i) * 8));
-		e.width = 32; e.height = 32;
+	randomAudience = [0, 6, 7, 10, 14, 21, 22, 23, 24, 32, 28];
+	for (i = 0; i < 64; i++){
+		tex = randomAudience[Math.floor(Math.random() * randomAudience.length)]
+		e = new Entity(32 + i * 64, 640 + (Math.sin(i) * 8));
+		e.width = 32; e.height = 32; e.texture = tex;
 		rooms[4].entities.push( e );
 		
-		e = new Entity(64 + i * 128, 720 + (Math.sin(i) * 8));
-		e.width = 32; e.height = 32;
+		tex = randomAudience[Math.floor(Math.random() * randomAudience.length)]
+		e = new Entity(32 + i * 64, 720 + (Math.sin(i) * 8));
+		e.width = 32; e.height = 32; e.texture = tex;
+		rooms[4].entities.push( e );
+		
+		tex = randomAudience[Math.floor(Math.random() * randomAudience.length)]
+		e = new Entity(32 + i * 64, 360 + (Math.sin(i) * 8));
+		e.width = 32; e.height = 32; e.texture = tex;
+		rooms[4].entities.push( e );
+		
+		tex = randomAudience[Math.floor(Math.random() * randomAudience.length)]
+		e = new Entity(32 + i * 64, 240 + (Math.sin(i) * 8));
+		e.width = 32; e.height = 32; e.texture = tex;
 		rooms[4].entities.push( e );
 	}
 	
