@@ -60,12 +60,6 @@ var distance = function( x1, y1, x2, y2 ) {
 var update = function (delta) {
 	t = 4
 	
-	if (66 in keysDown){
-		if (screen == screen_MAIN){
-			onResluts();
-		}
-	}
-	
 	if (65 in keysDown) { // left	
 		if (cam_unlock){
 			cam_dir -= Math.PI / 32;
@@ -146,8 +140,22 @@ var update = function (delta) {
 	if (!z_pressed && keybind_BOTTOM in keysDown == false){
 		z_released = true;
 	}
+	colors = [ "#000000", "#000049", "#044740", "#4C0613", "#005404", "#514D00", "#4F4032" ];
 	
-	if (screen == screen_MAIN){
+	if (screen == screen_MAIN && document.hasFocus()){
+		
+		if (globalTime % loadedSong.tpqn == 0){
+			rooms[4].backgroundColor = colors[ Math.floor(Math.random() * colors.length) ]
+		}
+	
+		for (i = 0; i < rooms[currentRoom].entities.length; i++){
+			
+			if (rooms[currentRoom].entities[i].bouncy){
+			rooms[currentRoom].entities[i].height = 
+
+			rooms[currentRoom].entities[i].height2 - 10 * Math.cos( loadedSong.time * Math.PI / loadedSong.tpqn );
+			}
+		}
 	
 		CAMSPEED = 1000;
 		RADIUS = rooms[currentRoom].radius;
@@ -160,6 +168,7 @@ var update = function (delta) {
 		globalTime++;
 	}else{
 		if (songPlaying){ songPlaying.pause();}
+		if (dialogPlaying){ dialogPlaying.pause();}
 	}
 }
 
@@ -243,7 +252,11 @@ var init = function () {
 	
 	screen_CUSTOM = {
 		elements: []
-	}	
+	}
+
+	screen_TITLE = {
+		elements: []
+	}
 	
 	for (i = 0; i < rooms.length; i++){
 		bt = new Button ( 192, 172 + i*72, rooms[i].name )
@@ -259,6 +272,10 @@ var init = function () {
 	}
 	b = new Button(400, 532, "Custom Songs..."); b.width = 256
 	screen_MENU.elements.push ( b );
+	
+	b = new Button(870, 400, "Quit"); b.width = 256; b.onClick = function(){ screen = screen_MENU; };
+	
+	screen_MAIN.elements.push (b);
 	
 	screen = screen_MENU;
 
@@ -286,6 +303,10 @@ var loadRoom = function( roomID ) {
 	initMapDrawing();
 	redrawFlag = true;
 	globalTime = 0;
+	
+	for (i = 0; i < rooms[currentRoom].entities.length; i++){
+		rooms[currentRoom].entities[i].height2 = rooms[currentRoom].entities[i].height;
+	}
 		
 	loadSong(rooms[currentRoom].song);
 	playDialog(rooms[currentRoom].dialogStart);
@@ -344,6 +365,42 @@ var onResluts = function() {
 	screen_RESLUTS.elements.push(nextButton);
 	};	
 	screen_RESLUTS.elements.push(menuButton);
+}
+
+window.onblur = function(){
+	if (songPlaying){
+		if (!songPlaying.ended){
+			songPlaying.pause();
+		}
+	}
+	if (dialogPlaying){
+		if (!dialogPlaying.ended){
+			dialogPlaying.pause();
+		}
+	}
+	if (sfxPlaying){
+		if (!sfxPlaying.ended){
+			sfxPlaying.pause();
+		}
+	}
+}
+
+window.onfocus = function(){
+	if (songPlaying){
+		if (!songPlaying.ended){
+			songPlaying.play();
+		}
+	}
+	if (dialogPlaying){
+		if (!dialogPlaying.ended){
+			dialogPlaying.play();
+		}
+	}
+	if (sfxPlaying){
+		if (!sfxPlaying.ended){
+			sfxPlaying.play();
+		}
+	}
 }
 
 document.addEventListener('DOMContentLoaded', function(e) {

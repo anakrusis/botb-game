@@ -12,9 +12,9 @@ loadedSong = {
 soundInitted = false;
 
 sfx_MET = new Audio(); sfx_MET.src = "sfx/met.ogg";
-sfx_OOF1 = new Audio(); sfx_OOF1.src = "sfx/oof1.ogg"; sfx_OOF1.volume = 0.5;
-sfx_OOF2 = new Audio(); sfx_OOF2.src = "sfx/oof2.ogg"; sfx_OOF2.volume = 0.5;
-sfx_OOF3 = new Audio(); sfx_OOF3.src = "sfx/oof3.ogg"; sfx_OOF3.volume = 0.5;
+sfx_OOF1 = new Audio(); sfx_OOF1.src = "sfx/oof1.ogg"; sfx_OOF1.volume = 0.3;
+sfx_OOF2 = new Audio(); sfx_OOF2.src = "sfx/oof2.ogg"; sfx_OOF2.volume = 0.3;
+sfx_OOF3 = new Audio(); sfx_OOF3.src = "sfx/oof3.ogg"; sfx_OOF3.volume = 0.3;
 
 sfx_OPM1 = new Audio(); sfx_OPM1.src = "sfx/opm1.ogg";
 sfx_OPM2 = new Audio(); sfx_OPM2.src = "sfx/opm2.ogg";
@@ -220,7 +220,7 @@ var noteHit = function (noteVal) {
 		
 		// If the pitch of the upcoming note matches, and you are within THRESHOLD ticks of it in either direction...
 		
-		THRESHOLD = 10;
+		THRESHOLD = 15;
 		diff = Math.abs(ls.times[index] - loadedSong.time);
 		//console.log(diff);
 		
@@ -259,7 +259,7 @@ var songTick = function () {
 				if (ls.pitches[index] == -1){ //rests are ignored
 					
 				}else{
-	/* 				sfx_MET.pause();
+/* 					sfx_MET.pause();
 					sfx_MET.currentTime = 0;
 					sfx_MET.play(); */
 			

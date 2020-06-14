@@ -104,7 +104,7 @@ def main():
     writeFile()
 
 def writeFile():
-    file_out.write(path_out + " = {\nspeed:1,\nloop:false,\nbpm:" + str(bpm) + ",\nsrc:'songs/level1.wav',\nch:[")
+    file_out.write(path_out + " = {\nspeed:1,\nloop:false,\nbpm:" + str(bpm) + ",\nsrc:'songs/level4.ogg',\nch:[")
     for i in range( len(channels) ):
         file_out.write('\n"' + channels[i] + '0r",')
     file_out.write("]};\nsongs.push(" + path_out + ");")

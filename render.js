@@ -352,7 +352,7 @@ var render = function () {
 					ctx.drawImage(tileset, 140, 128, 16, 16, 768, 188 + 72*i, 32, 32) // ohb tincan
 				}
 				
-				ctx.fillText("Σ" + round_score, 700, 208+i*72);
+				ctx.fillText("Σ" + round_score, 688, 208+i*72);
 			}
 		}
 	}

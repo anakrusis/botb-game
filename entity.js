@@ -10,6 +10,8 @@ class Entity {
 		this.height = 64;
 		this.width = 64;
 		this.shadow = true;
+		
+		this.bouncy = true; // does it boucne up and down in teh animation?
 	}
 	
 	update() {
@@ -20,7 +22,7 @@ class Entity {
 class Tree extends Entity {
 	constructor(x, y){
 		super(x, y);
-		this.width = 32; this.height = 72; this.texture = 5;
+		this.width = 32; this.height = 72; this.texture = 5; this.bouncy = false;
 	}
 }
 
@@ -43,7 +45,7 @@ var generateWall = function( room, startX, startY, endX, endY, height, texture, 
 			
 		e = new Entity(dx, dy);
 		e.width = WIDTH; e.height = height;
-		e.texture = texture;
+		e.texture = texture; e.bouncy = false;
 		
 		// replace 1 with ( texWidth / (height/WIDTH) for repeated tiling
 		e.sourceX =  Math.floor( (i * WIDTH)  % texWidth )

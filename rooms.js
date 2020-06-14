@@ -47,9 +47,9 @@ var initRooms = function () {
 	
 	rooms[0] = new Room ( "OHBing 101 - Hosted by kleeder", img_TILESET2.canvas, TileMaps.school, song_TUTORIAL );
 	rooms[1] = new Room ( "NES Sound Forest - Hosted by miau", img_TILESET2.canvas, TileMaps.forest, song_LEVEL1 );
-	rooms[2] = new Room ( "Vibrant Relaxing Coast - Hosted by Jakerson", img_TILESET2.canvas, TileMaps.beach, song_LEVEL1 );
+	rooms[2] = new Room ( "Vibrant Relaxing Coast - Hosted by Jakerson", img_TILESET2.canvas, TileMaps.beach, song_LEVEL2 );
 	rooms[3] = new Room ( "Pigeon Palace - Hosted by OminPigeonMaster" , img_TILESET2.canvas, TileMaps.roost, song_LEVEL3 );
-	rooms[4] = new Room ( "All About the Gig - Hosted by YOU" , img_TILESET2.canvas, TileMaps.stage, song_LEVEL1 );
+	rooms[4] = new Room ( "All About the Gig - Hosted by YOU" , img_TILESET2.canvas, TileMaps.stage, song_LEVEL4 );
 	
 	rooms[0].setDialog(sfx_KLEEDER1, sfx_KLEEDER4, sfx_KLEEDER3);
 	rooms[0].setCaptions("Hello class, this is Teacher Kleeder. If you want to win Battle of the Bits, you must first learn how to OHB. Okay class, get out your chiptars and play the notes as they pass by on your screen.",
@@ -58,7 +58,13 @@ var initRooms = function () {
 	
 	"Ach! You can do better than that! Try it again!")
 	
-	//rooms[0].radius = 128;
+	rooms[3].setCaptions("If you want to win Battle of the Bits, you're going to have to master the art of FM synthesis. You think you can handle it?", 
+	
+	"Wow. You really modulated those frequencies nicely, n00b. Keep up the good work.",
+	
+	"Your frequencies were not modulated enough, n00b. Try it again.");
+	
+	rooms[0].radius = 96;
 	
 	rooms[2].backgroundColor = "#7FC9FF";
 	rooms[2].radius = 128;
@@ -75,7 +81,15 @@ var initRooms = function () {
 	
 	e = new Entity(240, 240);
 	e.texture = 7;
-	rooms[0].entities.push( e ) // added a toadette to school
+	rooms[0].entities.push( e ) // added a toadette to school, students below
+	
+	e = new Entity(21 * 16, 13 * 16); e.texture = 24; rooms[0].entities.push(e); e.height = 32; e.width = 32;
+	
+	e = new Entity(12 * 16, 20 * 16); e.texture = 22; rooms[0].entities.push(e); e.height = 32; e.width = 32;
+	
+	e = new Entity(18 * 16, 22 * 16); e.texture = 21; rooms[0].entities.push(e); e.height = 32; e.width = 32;
+	
+	e = new Entity(9 * 16, 16 * 16); e.texture = 23; rooms[0].entities.push(e); e.height = 32; e.width = 32;
 	
 	e = new Entity(240, 240);
 	e.texture = 6;
@@ -115,7 +129,11 @@ var initRooms = function () {
 	}
 	
 	for (i = 0; i < 32; i++){
-		e = new Entity( Math.random() * 1024, Math.random() * 1024);
+		e = new Entity(64 + i * 128, 640 + (Math.sin(i) * 8));
+		e.width = 32; e.height = 32;
+		rooms[4].entities.push( e );
+		
+		e = new Entity(64 + i * 128, 720 + (Math.sin(i) * 8));
 		e.width = 32; e.height = 32;
 		rooms[4].entities.push( e );
 	}
